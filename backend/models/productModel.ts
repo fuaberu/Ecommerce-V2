@@ -1,4 +1,28 @@
-import { model, Schema } from 'mongoose';
+import { Document, model, Schema, Types } from 'mongoose';
+
+export interface IProduct extends Document {
+	name: string;
+	description: string;
+	price: number;
+	stock: number;
+	numOfReviews: number;
+	reviews: {
+		id: Types.ObjectId;
+		name: string;
+		user: Types.ObjectId;
+		comment: string;
+		rating: number;
+	}[];
+	rating: number;
+	images: [
+		{
+			public_id: { type: String; required: true };
+			url: { type: String; required: true };
+		}
+	];
+	category: string;
+	createdAt: Date;
+}
 
 const productSchema = new Schema({
 	name: {
@@ -24,6 +48,7 @@ const productSchema = new Schema({
 	reviews: [
 		{
 			name: { type: String, required: true },
+			user: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
 			comment: { type: String },
 			rating: {
 				type: Number,
@@ -45,4 +70,4 @@ const productSchema = new Schema({
 	createdAt: { type: Date, default: Date.now },
 });
 
-export default model('product', productSchema);
+export default model<IProduct>('product', productSchema);
