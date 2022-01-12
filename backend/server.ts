@@ -7,6 +7,7 @@ import { errorHandling } from './utils/error';
 //import routes
 import ProductsRoutes from './routes/productsRoute';
 import UserRoutes from './routes/userRoute';
+import OrdersRoutes from './routes/ordersRoute';
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use(cookieParser());
 app.get('/', (req, res) => res.send('Express + TypeScript Server'));
 app.use('/api/products', ProductsRoutes);
 app.use('/api/users', UserRoutes);
+app.use('/api/orders', OrdersRoutes);
 
 //error handling
 app.use(errorHandling);
