@@ -3,6 +3,7 @@ import {
 	createProduct,
 	createReview,
 	deleteProduct,
+	deleteReview,
 	getAllProducts,
 	getProduct,
 	udpateProduct,
@@ -33,7 +34,8 @@ ProductsRoutes.delete(
 );
 
 //AUTHENTICATED AREA
-ProductsRoutes.delete('/review', isAuthenticated, createReview);
+ProductsRoutes.post('/review', isAuthenticated, createReview);
+ProductsRoutes.delete('/review', isAuthenticated, deleteReview);
 
 //ALL USERS AREA
 ProductsRoutes.get('/', getAllProducts);

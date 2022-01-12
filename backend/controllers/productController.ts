@@ -53,7 +53,6 @@ export const getProduct = catchAsyncError(
 		if (!product) {
 			return next(ApiError.badRequest('Product not found'));
 		}
-		await product.remove();
 		res.status(200).json({ success: true, product });
 	}
 );
@@ -121,6 +120,10 @@ export const createReview = catchAsyncError(
 	async (req: Request, res: Response, next: NextFunction) => {
 		const { rating, comment, productId } = req.body;
 
+		//check for rating and comment input
+		if (!rating || !comment)
+			return next(ApiError.badRequest('Please input the rating and comment'));
+
 		const review = {
 			id: new Types.ObjectId(),
 			user: res.locals.user._id,
@@ -158,5 +161,40 @@ export const createReview = catchAsyncError(
 		product.save({ validateBeforeSave: true });
 
 		res.status(200).json({ success: true, product });
+	}
+);
+
+//delete a review
+export const deleteReview = catchAsyncError(
+	async (req: Request, res: Response, next: NextFunction) => {
+		const product = await productModel.findById(req.body.productId);
+
+		console.log(req.body.productId);
+
+		if (!product) {
+			return next(ApiError.badRequest('Product not found'));
+		}
+
+		const reviews = product.reviews.filter(
+			(rev) => rev.id.toString() === req.body.reviewId
+		);
+		console.log(reviews);
+
+		let average = 0;
+		reviews.forEach((rev) => (average += rev.rating));
+		const rating = average / reviews.length;
+		const numOfReviews = reviews.length;
+
+		const response = await productModel.findByIdAndUpdate(
+			req.body.productId,
+			{
+				reviews,
+				rating,
+				numOfReviews,
+			},
+			{ new: true, runValidators: true }
+		);
+
+		res.status(200).json({ success: true, response });
 	}
 );
