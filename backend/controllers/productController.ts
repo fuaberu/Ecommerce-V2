@@ -1,28 +1,34 @@
 import { NextFunction, Request, Response } from 'express';
-import { Query } from 'mongoose';
+import { Types } from 'mongoose';
 import productModel from '../models/productModel';
 import ApiError from '../utils/apiError';
 import catchAsyncError from '../utils/error';
 
+//------------------- ADMIN -------------------//
+
 //create Product - admin
-export const createProduct = catchAsyncError(async (req: Request, res: Response) => {
-	const product = await productModel.create(req.body);
-	res.status(200).json({ success: true, product });
-});
+export const createProduct = catchAsyncError(
+	async (req: Request, res: Response, next: NextFunction) => {
+		const product = await productModel.create(req.body);
+		res.status(200).json({ success: true, product });
+	}
+);
 
 //update product - admin
-export const udpateProduct = catchAsyncError(async (req: Request, res: Response) => {
-	const exists = await productModel.findById(req.params.productId);
+export const udpateProduct = catchAsyncError(
+	async (req: Request, res: Response, next: NextFunction) => {
+		const exists = await productModel.findById(req.params.productId);
 
-	if (!exists) {
-		return res.status(500).json({ success: false, message: 'Product not found' });
+		if (!exists) {
+			return res.status(500).json({ success: false, message: 'Product not found' });
+		}
+		const product = await productModel.findByIdAndUpdate(req.params.productId, req.body, {
+			returnOriginal: false,
+			runValidators: true,
+		});
+		res.status(200).json({ success: true, product });
 	}
-	const product = await productModel.findByIdAndUpdate(req.params.productId, req.body, {
-		returnOriginal: false,
-		runValidators: true,
-	});
-	res.status(200).json({ success: true, product });
-});
+);
 
 //delete Product - admin
 export const deleteProduct = catchAsyncError(
@@ -36,6 +42,8 @@ export const deleteProduct = catchAsyncError(
 		res.status(200).json({ success: true, message: 'Product deleted successfully' });
 	}
 );
+
+//------------------- USER -------------------//
 
 //get a product
 export const getProduct = catchAsyncError(
@@ -105,5 +113,50 @@ export const getAllProducts = catchAsyncError(
 			products.length - (pageIndex + 1) * limitNum > 0 ? pageIndex + 2 : null;
 
 		res.status(200).json({ success: true, products, page: pageIndex + 1, nextPage });
+	}
+);
+
+//create a review
+export const createReview = catchAsyncError(
+	async (req: Request, res: Response, next: NextFunction) => {
+		const { rating, comment, productId } = req.body;
+
+		const review = {
+			id: new Types.ObjectId(),
+			user: res.locals.user._id,
+			name: res.locals.user.name,
+			rating,
+			comment,
+		};
+
+		const product = await productModel.findById(productId);
+
+		if (!product) {
+			return next(ApiError.badRequest('Product not found'));
+		}
+		const alreadyReviewed = product.reviews.find(
+			(rev) => rev.user.toString() === res.locals.user._id
+		);
+
+		if (alreadyReviewed) {
+			product.reviews.find((rev) => {
+				if (rev.id === alreadyReviewed.id) {
+					rev.comment = comment;
+					rev.rating = rating;
+				}
+			});
+		} else {
+			product.reviews.push(review);
+			product.numOfReviews = product.reviews.length;
+		}
+
+		let average = 0;
+		product.reviews.forEach((rev) => (average += rev.rating));
+		product.rating = average / product.reviews.length;
+
+		//save changes
+		product.save({ validateBeforeSave: true });
+
+		res.status(200).json({ success: true, product });
 	}
 );
