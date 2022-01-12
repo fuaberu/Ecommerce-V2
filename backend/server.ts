@@ -1,14 +1,14 @@
 import express, { Errback } from 'express';
 import dotenv from 'dotenv';
 import { connect } from 'mongoose';
+import cookieParser from 'cookie-parser';
 
+import { errorHandling } from './utils/error';
 //import routes
 import ProductsRoutes from './routes/productsRoute';
-import { errorHandling } from './utils/error';
+import UserRoutes from './routes/userRoute';
 
 const app = express();
-
-app.use(express.json());
 
 //config
 dotenv.config({ path: 'backend/config/config.env' });
@@ -19,9 +19,14 @@ process.env.MONGO_URL &&
 		console.log('Mongo connected');
 	});
 
+//middlewares
+app.use(express.json());
+app.use(cookieParser());
+
 //routes
 app.get('/', (req, res) => res.send('Express + TypeScript Server'));
 app.use('/api/products', ProductsRoutes);
+app.use('/api/users', UserRoutes);
 
 //error handling
 app.use(errorHandling);
