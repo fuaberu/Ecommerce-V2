@@ -70,4 +70,4 @@ const productSchema = new Schema({
 	createdAt: { type: Date, default: Date.now },
 });
 
-export default model<IProduct>('product', productSchema);
+export default model<IProduct>('Product', productSchema);
