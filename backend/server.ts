@@ -2,6 +2,7 @@ import express, { Errback } from 'express';
 import dotenv from 'dotenv';
 import { connect } from 'mongoose';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 
 import { errorHandling } from './utils/error';
 //import routes
@@ -21,6 +22,7 @@ process.env.MONGO_URL &&
 	});
 
 //middlewares
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 
