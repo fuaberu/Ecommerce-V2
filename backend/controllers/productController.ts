@@ -108,10 +108,17 @@ export const getAllProducts = catchAsyncError(
 			return next(ApiError.badRequest('No Products Were Found'));
 		}
 
+		let highestPrice = 0;
+		products.forEach((prod) =>
+			prod.price > highestPrice ? (highestPrice = prod.price) : null
+		);
+		console.log('call', page);
 		const nextPage =
 			products.length - (pageIndex + 1) * limitNum > 0 ? pageIndex + 2 : null;
 
-		res.status(200).json({ success: true, products, page: pageIndex + 1, nextPage });
+		res
+			.status(200)
+			.json({ success: true, products, page: pageIndex + 1, nextPage, highestPrice });
 	}
 );
 

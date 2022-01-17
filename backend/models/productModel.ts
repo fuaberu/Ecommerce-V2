@@ -14,12 +14,14 @@ export interface IProduct extends Document {
 		rating: number;
 	}[];
 	rating: number;
-	images: [
-		{
-			public_id: { type: String; required: true };
-			url: { type: String; required: true };
-		}
-	];
+	mainImage: {
+		public_id: string;
+		url: string;
+	};
+	detailedImages: {
+		public_id: string;
+		url: string;
+	}[];
 	category: string;
 	createdAt: Date;
 }
@@ -60,10 +62,14 @@ const productSchema = new Schema({
 		type: Number,
 		default: 0,
 	},
-	images: [
+	mainImage: {
+		public_id: { type: String, required: [true, 'Please Enter The Product Image'] },
+		url: { type: String, required: true },
+	},
+	detailedImages: [
 		{
-			public_id: { type: String, required: true },
-			url: { type: String, required: true },
+			public_id: { type: String },
+			url: { type: String },
 		},
 	],
 	category: { type: String, required: [true, 'Please Enter The Product Category'] },
