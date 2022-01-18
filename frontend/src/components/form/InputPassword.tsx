@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { IconContainer, InputContainer, InputInterface } from './Input';
-import { AiOutlineEye, AiFillLock } from 'react-icons/ai';
+import { AiOutlineEye, AiOutlineLock } from 'react-icons/ai';
 import styled from 'styled-components';
 
 interface InputPaswordInterface {
@@ -19,7 +19,7 @@ const InputPassword = ({
 	const [hide, setHide] = useState(true);
 	return (
 		<div style={{ position: 'relative', width: 'fit-content', marginBottom: '1rem' }}>
-			<IconContainer>{<AiFillLock size={24} />}</IconContainer>
+			<IconContainer>{<AiOutlineLock size={24} />}</IconContainer>
 			<IconEyeButton type="button" onClick={() => setHide(!hide)}>
 				<AiOutlineEye size={24} />
 			</IconEyeButton>

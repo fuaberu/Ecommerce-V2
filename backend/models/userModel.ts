@@ -7,12 +7,10 @@ export interface IUser extends Document {
 	name: string;
 	email: string;
 	password: number;
-	images: [
-		{
-			public_id: { type: String; required: true };
-			url: { type: String; required: true };
-		}
-	];
+	profilePic: {
+		public_id: string;
+		url: string;
+	};
 	role: string;
 	passwordToken: string;
 	createdAt: Date;
