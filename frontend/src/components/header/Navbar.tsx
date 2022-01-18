@@ -1,20 +1,26 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { RootState } from '../../app/store';
+import UserOptions from './UserOptions';
 
 const Navbar = () => {
 	const [open, setOpen] = useState(false);
-	const [pageWidth, setPageWidth] = useState<number>(0);
+	const [pageWidth, setPageWidth] = useState<number>(window.innerWidth);
+
+	const { user } = useSelector((state: RootState) => state.user);
 
 	useEffect(() => {
 		function handleResize() {
-			setOpen(window.innerWidth > 768 ? true : false);
 			setPageWidth(window.innerWidth);
 		}
 
 		window.addEventListener('resize', handleResize);
 
+		console.log(pageWidth);
 		return () => window.removeEventListener('resize', handleResize);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const menuConfig = {
@@ -61,11 +67,11 @@ const Navbar = () => {
 					<Link to="/">Store Name</Link>
 				</button>
 			</Div>
-			<NavContainer>
+			<NavContainer style={!open && pageWidth < 768 ? { height: 0 } : {}}>
 				<LinkBtn
 					onClick={() => setOpen(false)}
 					style={
-						open
+						open || pageWidth > 768
 							? { transform: 'translateX(0%)', transitionDelay: '0.2s' }
 							: { transform: 'translateX(100%)', transitionDelay: '0.2s' }
 					}
@@ -76,7 +82,7 @@ const Navbar = () => {
 				<LinkBtn
 					onClick={() => setOpen(false)}
 					style={
-						open
+						open || pageWidth > 768
 							? { transform: 'translateX(0%)', transitionDelay: '0.3s' }
 							: { transform: 'translateX(100%)', transitionDelay: '0.3s' }
 					}
@@ -84,40 +90,19 @@ const Navbar = () => {
 				>
 					Products
 				</LinkBtn>
-				<LinkBtn
-					onClick={() => setOpen(false)}
-					style={
-						open
-							? { transform: 'translateX(0%)', transitionDelay: '0.4s' }
-							: { transform: 'translateX(100%)', transitionDelay: '0.4s' }
-					}
-					to="/contact"
-				>
-					Contact
-				</LinkBtn>
-				<LinkBtn
-					onClick={() => setOpen(false)}
-					style={
-						open
-							? { transform: 'translateX(0%)', transitionDelay: '0.5s' }
-							: { transform: 'translateX(100%)', transitionDelay: '0.5s' }
-					}
-					to="/about"
-				>
-					About
-				</LinkBtn>
 			</NavContainer>
+			<UserOptions user={user} />
 		</Container>
 	);
 };
 
-const Container = styled.div`
+const Container = styled.header`
 	position: fixed;
 	width: 100%;
 	top: 0;
-	background-color: red;
-	height: ${(props) => props.theme.navHeight};
+	background-color: #ebedf1;
 	transition: height 1s;
+	z-index: 10;
 	@media (min-width: 768px) {
 		display: flex;
 		justify-content: space-between;
