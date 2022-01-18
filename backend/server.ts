@@ -22,7 +22,13 @@ process.env.MONGO_URL &&
 	});
 
 //middlewares
-app.use(cors());
+app.use(
+	cors({
+		credentials: true,
+		origin: ['http://localhost:3000'],
+		methods: 'GET,PUT,POST,DELETE',
+	})
+);
 app.use(express.json());
 app.use(cookieParser());
 
