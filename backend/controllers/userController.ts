@@ -3,6 +3,7 @@ import userModel from '../models/userModel';
 import ApiError from '../utils/apiError';
 import catchAsyncError from '../utils/error';
 import sendToken from '../utils/cookie';
+import isEmail from 'validator/lib/isEmail';
 
 //------------------- USER -------------------//
 
@@ -36,6 +37,8 @@ export const loginUser = catchAsyncError(
 			return next(ApiError.badRequest('Please Enter Your Email and Password'));
 		}
 
+		if (!isEmail(email)) return next(ApiError.badRequest('Please Enter a valid Email'));
+
 		//get user
 		const user = await userModel.findOne({ email }).select('+password');
 
@@ -44,6 +47,7 @@ export const loginUser = catchAsyncError(
 		}
 		//check password
 		const valid = await user.isValidPassword(password);
+
 		if (!valid) return next(ApiError.badRequest('Invalid Email or Password'));
 
 		sendToken(user, res);
@@ -63,7 +67,7 @@ export const logoutUser = catchAsyncError(
 	}
 );
 
-//get user detailes
+//get current user detailes
 export const getCurrentUser = catchAsyncError(
 	async (req: Request, res: Response, next: NextFunction) => {
 		//user needs to be logged to ask
