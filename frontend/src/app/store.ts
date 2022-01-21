@@ -2,14 +2,20 @@ import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/dist/query';
 import { productsApi } from './sevices/products';
 import { usersApi } from './sevices/user';
-import userReducer from './slices/user';
+import { paymentApi } from './sevices/payment';
+import userReducer from './slices/userSlice';
+import cartReducer from './slices/cartSlice';
+import orderReducer from './slices/orderSlice';
 // ...
 
 export const store = configureStore({
 	reducer: {
 		[productsApi.reducerPath]: productsApi.reducer,
 		[usersApi.reducerPath]: usersApi.reducer,
+		[paymentApi.reducerPath]: paymentApi.reducer,
 		user: userReducer,
+		cart: cartReducer,
+		order: orderReducer,
 	},
 
 	middleware: (getDefaultMiddleware) =>
