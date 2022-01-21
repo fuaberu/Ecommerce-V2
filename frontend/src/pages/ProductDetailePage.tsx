@@ -1,30 +1,54 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Rating } from 'react-simple-star-rating';
 import styled from 'styled-components';
 import { useGetAProductQuery } from '../app/sevices/products';
+import { addProduct } from '../app/slices/cartSlice';
+import { RootState } from '../app/store';
 import Carousel from '../components/product/Carousel';
 
 const ProductDetailePage = () => {
 	const [rating, setRating] = useState(0);
-	const [productQuantity, setProductQuantity] = useState<number>(0);
+	const [productQuantity, setProductQuantity] = useState<number>(1);
+	const dispatch = useDispatch();
+
+	const navigate = useNavigate();
+	const { productId } = useParams();
+
+	const { data, error, isLoading } = useGetAProductQuery(productId || '');
+	const cart = useSelector((state: RootState) => state.cart);
+
+	useEffect(() => {
+		if (data && data.product.stock < 1) setProductQuantity(0);
+	}, [data]);
+
+	if (!data) return <p>Nodata</p>;
+
+	const addToCart = () => {
+		const currentQantity =
+			cart.cartItems.find((e) => e.value._id === productId)?.quantity || 0;
+		if (currentQantity + productQuantity > data.product.stock) return;
+		//alert that thats the stock
+		dispatch(addProduct({ value: data.product, quantity: productQuantity }));
+		navigate('/cart');
+	};
+
 	const handleRating = (rate: number) => {
 		setRating(rate);
 		// Some logic
 	};
-	const navigate = useNavigate();
-	let params = useParams<{ productId: string }>();
-
-	const { data, error, isLoading } = useGetAProductQuery(params.productId as string);
-	if (!data) return <p>Nodata</p>;
-
 	const minusQuantity = () => {
-		setProductQuantity(productQuantity > 0 ? productQuantity - 1 : 0);
+		setProductQuantity(productQuantity > 1 ? productQuantity - 1 : 1);
 	};
 	const plusQuantity = () => {
-		setProductQuantity(
-			productQuantity < data.product.stock ? productQuantity + 1 : productQuantity
-		);
+		if (data.product.stock < 1) return;
+		const currentQantity =
+			cart.cartItems.find((e) => e.value._id === productId)?.quantity || 0;
+
+		if (productQuantity >= data.product.stock - currentQantity) return;
+
+		setProductQuantity(productQuantity + 1);
 	};
 
 	return (
@@ -68,7 +92,7 @@ const ProductDetailePage = () => {
 							/>
 							<NumericButton onClick={() => plusQuantity()}>+</NumericButton>
 						</div>
-						<button>add to cart</button>
+						<button onClick={() => addToCart()}>add to cart</button>
 					</Flex>
 					<p>
 						Status:{' '}
@@ -93,7 +117,7 @@ const ImageSection = styled.section`
 const BuySection = styled.section`
 	flex: 1;
 `;
-const NumericButton = styled.button`
+export const NumericButton = styled.button`
 	width: 1.5rem;
 	height: 1.5rem;
 	background-color: tomato;
