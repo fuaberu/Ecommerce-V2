@@ -9,6 +9,7 @@ import { errorHandling } from './utils/error';
 import ProductsRoutes from './routes/productsRoute';
 import UserRoutes from './routes/userRoute';
 import OrdersRoutes from './routes/ordersRoute';
+import PaymentRoutes from './routes/paymentRoute';
 
 const app = express();
 
@@ -37,6 +38,7 @@ app.get('/', (req, res) => res.send('Express + TypeScript Server'));
 app.use('/api/products', ProductsRoutes);
 app.use('/api/users', UserRoutes);
 app.use('/api/orders', OrdersRoutes);
+app.use('/api/payment', PaymentRoutes);
 
 //error handling
 app.use(errorHandling);

@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import { Types } from 'mongoose';
 import orderModel from '../models/orderModel';
 import ApiError from '../utils/apiError';
 import catchAsyncError from '../utils/error';
