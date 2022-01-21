@@ -90,6 +90,17 @@ const Navbar = () => {
 				>
 					Products
 				</LinkBtn>
+				<LinkBtn
+					onClick={() => setOpen(false)}
+					style={
+						open || pageWidth > 768
+							? { transform: 'translateX(0%)', transitionDelay: '0.3s' }
+							: { transform: 'translateX(100%)', transitionDelay: '0.3s' }
+					}
+					to="/cart"
+				>
+					cart
+				</LinkBtn>
 			</NavContainer>
 			<UserOptions user={user} />
 		</Container>

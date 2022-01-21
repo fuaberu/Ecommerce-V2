@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { IUser } from '../../app/slices/user';
+import { IUser } from '../../app/slices/userSlice';
 import {
 	AiOutlineLogout,
 	AiOutlineLogin,

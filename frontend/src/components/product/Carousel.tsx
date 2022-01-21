@@ -12,11 +12,9 @@ const Carousel = ({ images }: { images: Image[] }) => {
 	const [current, setCurrent] = useState<number>(0);
 
 	const nextSlide = () => {
-		console.log('next');
 		setCurrent(current === images.length - 1 ? 0 : current + 1);
 	};
 
-	console.log('prev');
 	const prevSlide = () => {
 		setCurrent(current === 0 ? images.length - 1 : current - 1);
 	};
@@ -38,9 +36,9 @@ const Carousel = ({ images }: { images: Image[] }) => {
 			<ShowSlide>
 				{images.map((img, index) =>
 					index === current ? (
-						<VscDebugBreakpointLog />
+						<VscDebugBreakpointLog key={index} />
 					) : (
-						<VscDebugBreakpointLogUnverified />
+						<VscDebugBreakpointLogUnverified key={index} />
 					)
 				)}
 			</ShowSlide>
