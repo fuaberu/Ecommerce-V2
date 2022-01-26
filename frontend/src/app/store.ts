@@ -1,25 +1,32 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { setupListeners } from '@reduxjs/toolkit/dist/query';
-import { productsApi } from './sevices/products';
-import { usersApi } from './sevices/user';
-import { paymentApi } from './sevices/payment';
-import userReducer from './slices/userSlice';
-import cartReducer from './slices/cartSlice';
-import orderReducer from './slices/orderSlice';
+import { configureStore } from "@reduxjs/toolkit";
+import { setupListeners } from "@reduxjs/toolkit/dist/query";
+import { productsApi } from "./sevices/products";
+import { usersApi } from "./sevices/user";
+import { paymentApi } from "./sevices/payment";
+import userReducer from "./slices/userSlice";
+import cartReducer from "./slices/cartSlice";
+import orderReducer from "./slices/orderSlice";
+import { ordersApi } from "./sevices/orders";
 // ...
 
 export const store = configureStore({
-	reducer: {
-		[productsApi.reducerPath]: productsApi.reducer,
-		[usersApi.reducerPath]: usersApi.reducer,
-		[paymentApi.reducerPath]: paymentApi.reducer,
-		user: userReducer,
-		cart: cartReducer,
-		order: orderReducer,
-	},
+  reducer: {
+    [productsApi.reducerPath]: productsApi.reducer,
+    [usersApi.reducerPath]: usersApi.reducer,
+    [paymentApi.reducerPath]: paymentApi.reducer,
+    [ordersApi.reducerPath]: ordersApi.reducer,
+    user: userReducer,
+    cart: cartReducer,
+    order: orderReducer,
+  },
 
-	middleware: (getDefaultMiddleware) =>
-		getDefaultMiddleware().concat(productsApi.middleware, usersApi.middleware),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(
+      productsApi.middleware,
+      usersApi.middleware,
+      paymentApi.middleware,
+      ordersApi.middleware
+    ),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

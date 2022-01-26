@@ -12,24 +12,30 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import styled from "styled-components";
 import { clearCart } from "../../app/slices/cartSlice";
+import { useCreateOrderMutation } from "../../app/sevices/orders";
+import { clearOrder } from "../../app/slices/orderSlice";
+import Spinner from "../smallComponents/Spinner";
+import { useNavigate } from "react-router-dom";
 
-const PaymentContainer = () => {
+const PaymentContainer = ({ clientSecret }: { clientSecret: string }) => {
   const stripe = useStripe();
   const elements = useElements();
 
   const [message, setMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  const order = useSelector((state: RootState) => state.order);
+  const user = useSelector((state: RootState) => state.user);
+
+  const [createOrder] = useCreateOrderMutation();
+
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!stripe) {
       return;
     }
-
-    const clientSecret = new URLSearchParams(window.location.search).get(
-      "payment_intent_client_secret"
-    );
 
     if (!clientSecret) {
       return;
@@ -40,6 +46,16 @@ const PaymentContainer = () => {
       switch (paymentIntent.status) {
         case "succeeded":
           setMessage("Payment succeeded!");
+          //clear current order slice
+          dispatch(clearOrder());
+          //create new order in db
+          createOrder({
+            ...order,
+            paymentInfo: { id: paymentIntent.id, status: paymentIntent.status },
+            orderStatus: "paid",
+          });
+          //go back to home page
+          navigate("/");
           break;
         case "processing":
           setMessage("Your payment is processing.");
@@ -57,9 +73,7 @@ const PaymentContainer = () => {
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
-    if (!stripe || !elements) {
-      // Stripe.js has not yet loaded.
-      // Make sure to disable form submission until Stripe.js has loaded.
+    if (!stripe || !elements || !user.user) {
       return;
     }
 
@@ -67,20 +81,36 @@ const PaymentContainer = () => {
 
     const { error } = await stripe.confirmPayment({
       elements,
+      redirect: "if_required",
       confirmParams: {
         // Make sure to change this to your payment completion page
-        return_url: "http://localhost:3000",
+        return_url: `http://localhost:3000/success/${clientSecret}`,
+        receipt_email: user.user.email,
+        shipping: {
+          name: user.user.name,
+          address: {
+            city: order.shippingInfo?.city,
+            country: order.shippingInfo?.country,
+            line1: order.shippingInfo?.address as string,
+            postal_code: order.shippingInfo?.zipCode.toString(),
+            state: order.shippingInfo?.state,
+          },
+        },
       },
     });
 
-    if (!error) dispatch(clearCart());
+    if (!error) {
+      dispatch(clearCart());
+      setIsLoading(false);
+      return;
+    }
 
     if (error.type === "card_error" || error.type === "validation_error") {
       error.message && setMessage(error.message);
     } else {
+      console.log(error.message);
       setMessage("An unexpected error occured.");
     }
-
     setIsLoading(false);
   };
 

@@ -54,7 +54,7 @@ const PaymentPage = () => {
     <Container>
       {clientSecret && (
         <Elements options={options} stripe={stripePromise}>
-          <PaymentContainer />
+          <PaymentContainer clientSecret={clientSecret} />
         </Elements>
       )}
     </Container>
