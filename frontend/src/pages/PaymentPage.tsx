@@ -1,77 +1,68 @@
-import React, { useEffect, useState } from 'react';
-import { Elements, useStripe } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
-import { useGetStripeKeyQuery, usePostPaymentQuery } from '../app/sevices/payment';
-import Input from '../components/form/Input';
-import { FaRegCreditCard, FaRegCalendarAlt, FaKey } from 'react-icons/fa';
-import { RootState } from '../app/store';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import {
+  useGetStripeKeyQuery,
+  usePostPaymentQuery,
+} from "../app/sevices/payment";
+
+import { RootState } from "../app/store";
+import { useSelector } from "react-redux";
+import PaymentContainer from "../components/payment/PaymentContainer";
+import styled from "styled-components";
 
 const PaymentPage = () => {
-	const [card, setCard] = useState('');
-	const [date, setDate] = useState('');
-	const [cardKey, setCardKey] = useState('');
-	const [skip, setSkip] = useState(true);
+  const [stripeKey, setStripeKey] = useState<string>();
+  const [clientSecret, setClientSecret] = useState<string>();
+  const [skip, setSkip] = useState(true);
 
-	const stripe = useStripe();
+  const order = useSelector((state: RootState) => state.order);
 
-	const [paymentBody, setPaymentBody] = useState({ amount: 0, currency: 'USD' });
+  const { data: stripeKeyData, error: keyError } = useGetStripeKeyQuery();
+  const { data: clientSecretData, error: secretError } = usePostPaymentQuery(
+    {
+      amount: order.totalPrice * 100,
+      currency: "eur",
+    },
+    { skip: skip }
+  );
 
-	const order = useSelector((state: RootState) => state.order);
+  useEffect(() => {
+    if (stripeKeyData?.stripeApiKey && order.totalPrice > 0) {
+      setSkip(false);
+    } else {
+      setSkip(true);
+    }
+  }, [stripeKeyData]);
 
-	const { data: stripeKey } = useGetStripeKeyQuery();
-	const {
-		data: paymentData,
-		error,
-		isLoading,
-	} = usePostPaymentQuery(paymentBody, { skip });
+  useEffect(() => {
+    stripeKeyData && setStripeKey(stripeKeyData.stripeApiKey);
+    clientSecretData && setClientSecret(clientSecretData.client_secret);
+  }, [stripeKeyData, clientSecretData]);
 
-	const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
+  if (!stripeKey) return <div>No key</div>;
+  const stripePromise = loadStripe(stripeKey);
 
-		setSkip(false);
+  const options = {
+    clientSecret: clientSecret,
+    appearance: {
+      theme: "flat" as "flat",
+    },
+  };
 
-		setSkip(true);
-	};
-
-	useEffect(() => {}, [input]);
-	return (
-		<Elements stripe={loadStripe(stripeKey?.stripeApiKey || '')}>
-			<form onSubmit={(e) => onSubmit(e)}>
-				<Input
-					state={card}
-					setState={setCard}
-					placeholder="1616"
-					icon={<FaRegCreditCard />}
-					isValid={{
-						recived: false,
-						status: false,
-					}}
-				/>
-				<Input
-					state={date}
-					setState={setDate}
-					placeholder="1616"
-					icon={<FaRegCalendarAlt />}
-					isValid={{
-						recived: false,
-						status: false,
-					}}
-				/>
-				<Input
-					state={cardKey}
-					setState={setCardKey}
-					placeholder="1616"
-					icon={<FaKey />}
-					isValid={{
-						recived: false,
-						status: false,
-					}}
-				/>
-				<button type="submit">Pay</button>
-			</form>
-		</Elements>
-	);
+  return (
+    <Container>
+      {clientSecret && (
+        <Elements options={options} stripe={stripePromise}>
+          <PaymentContainer />
+        </Elements>
+      )}
+    </Container>
+  );
 };
+
+const Container = styled.div`
+  padding: 1rem;
+`;
 
 export default PaymentPage;

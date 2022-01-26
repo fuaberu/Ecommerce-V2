@@ -4,7 +4,6 @@ import {
 	FetchArgs,
 	fetchBaseQuery,
 } from '@reduxjs/toolkit/query/react';
-import { Types } from 'mongoose';
 
 export interface Product {
 	_id: string;
@@ -14,9 +13,9 @@ export interface Product {
 	stock: number;
 	numOfReviews: number;
 	reviews: {
-		id: Types.ObjectId;
+		id: string;
 		name: string;
-		user: Types.ObjectId;
+		user: string;
 		comment: string;
 		rating: number;
 	}[];

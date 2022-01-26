@@ -37,8 +37,6 @@ export const createOrder = catchAsyncError(
 //get a user orders
 export const getMyOrders = catchAsyncError(
 	async (req: Request, res: Response, next: NextFunction) => {
-		console.log(res.locals.user._id);
-		console.log('hi');
 		const orders = await orderModel.find({ user: res.locals.user._id });
 		if (!orders.length)
 			return next(ApiError.badRequest('Current user does not have any orders'));
