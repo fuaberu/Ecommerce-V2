@@ -16,7 +16,7 @@ export interface OrderItems {
   productId: string;
 }
 
-interface IOrder {
+export interface IOrder {
   shippingInfo: ShippingInfo | null;
   orderItems: OrderItems[] | null;
   paymentInfo: { id: string | null; status: string | null };
@@ -57,6 +57,9 @@ export const orderSlice = createSlice({
     ) => {
       state.orderItems = payload.items;
     },
+    clearOrder: (state) => {
+      state = initialState;
+    },
     setOrderInfo: (
       state,
       {
@@ -81,6 +84,7 @@ export const orderSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setShipping, setOrderCart, setOrderInfo } = orderSlice.actions;
+export const { setShipping, setOrderCart, setOrderInfo, clearOrder } =
+  orderSlice.actions;
 
 export default orderSlice.reducer;
