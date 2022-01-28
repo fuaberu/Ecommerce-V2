@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "../../components/form/Input";
 import { MdInput } from "react-icons/md";
 import { BsCurrencyDollar, BsBoxSeam } from "react-icons/bs";
 import { GrNotes } from "react-icons/gr";
 import styled from "styled-components";
 import { uploadPics } from "../../firebase/firebaseConfig";
-import { useCreateProductMutation } from "../../app/sevices/products";
+import {
+  useCreateProductMutation,
+  useGetProductsCategoriesQuery,
+  useGetProductsListQuery,
+} from "../../app/sevices/products";
 
 const NewProductPage = () => {
   const [name, setName] = useState("");
@@ -17,6 +21,7 @@ const NewProductPage = () => {
   const [files, setFiles] = useState<File[]>([]);
 
   const [createProduct, { isLoading, error }] = useCreateProductMutation();
+  const { data: categories } = useGetProductsCategoriesQuery();
 
   const onImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.currentTarget.files) return;
@@ -30,14 +35,20 @@ const NewProductPage = () => {
     });
   };
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  useEffect(() => {
+    console.log(categories);
+  }, [categories]);
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     // upload to firebase
-    const urls = uploadPics(files);
+    const urls = await uploadPics(files);
+    console.log(urls);
 
+    if (!urls) return console.log("no photos");
     // add to mongodb
-    createProduct({
+    await createProduct({
       name,
       description,
       price: Number(price),
@@ -76,6 +87,18 @@ const NewProductPage = () => {
           placeholder="Stock"
           icon={<BsBoxSeam size={18} />}
         />
+        <SelectInput
+          list="brow"
+          placeholder="Category"
+          onChange={(e) => setCategory(e.target.value)}
+          value={category}
+        />
+        <datalist id="brow">
+          {categories &&
+            categories?.categories.map((op, index) => (
+              <option value={op}>{op}</option>
+            ))}
+        </datalist>
         <ImgInputLabel htmlFor="fileInput">
           <input
             type="file"
@@ -121,6 +144,18 @@ const Container = styled.div`
       }
     }
   }
+`;
+
+const SelectInput = styled.input`
+  height: 28px;
+  padding-left: 40px;
+  padding-right: 24px;
+  outline: none;
+  border: 1px solid black;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 380px;
+  margin-bottom: 1rem;
 `;
 
 const ImgInputLabel = styled.label`

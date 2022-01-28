@@ -4,6 +4,7 @@ import {
   createReview,
   deleteProduct,
   deleteReview,
+  getAllCategories,
   getAllProducts,
   getProduct,
   udpateProduct,
@@ -31,6 +32,7 @@ ProductsRoutes.delete(
 ProductsRoutes.put("/:productId", isAuthenticated, udpateProduct);
 ProductsRoutes.post("/review", isAuthenticated, createReview);
 ProductsRoutes.delete("/review", isAuthenticated, deleteReview);
+ProductsRoutes.get("/categories", isAuthenticated, getAllCategories);
 
 //ALL USERS AREA
 ProductsRoutes.get("/", getAllProducts);

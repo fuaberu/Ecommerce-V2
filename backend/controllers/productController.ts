@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { Types } from "mongoose";
 import productModel from "../models/productModel";
+import siteInfoModel from "../models/siteInfoModel";
 import ApiError from "../utils/apiError";
 import catchAsyncError from "../utils/error";
 
@@ -10,7 +11,19 @@ import catchAsyncError from "../utils/error";
 export const createProduct = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const product = await productModel.create(req.body);
-    res.status(200).json({ success: true, product });
+
+    //update the site information
+    const siteInfo = await siteInfoModel.findById(1);
+    if (siteInfo) {
+      if (!siteInfo.categories.includes(req.body.category)) {
+        siteInfo.categories.push(req.body.category);
+      }
+      siteInfo.totalProducts++;
+      siteInfo.save();
+    }
+    res
+      .status(200)
+      .json({ success: true, product, categories: siteInfo?.categories });
   }
 );
 
@@ -40,9 +53,22 @@ export const udpateProduct = catchAsyncError(
 export const deleteProduct = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const product = await productModel.findById(req.params.productId);
-
     if (!product) {
       return next(ApiError.badRequest("Product not found"));
+    }
+    //update the site information
+    const siteInfo = await siteInfoModel.findById(1);
+    if (siteInfo) {
+      if (
+        siteInfo.categories.filter((v) => v === product.category).length === 1
+      ) {
+        siteInfo.categories.splice(
+          siteInfo.categories.indexOf(product.category),
+          1
+        );
+      }
+      siteInfo.totalProducts--;
+      siteInfo.save();
     }
     await product.remove();
     res
@@ -62,6 +88,17 @@ export const getProduct = catchAsyncError(
       return next(ApiError.badRequest("Product not found"));
     }
     res.status(200).json({ success: true, product });
+  }
+);
+
+//get all categories
+export const getAllCategories = catchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const siteInfo = await siteInfoModel.findById(1);
+    res.status(200).json({
+      success: true,
+      categories: siteInfo ? siteInfo.categories : [],
+    });
   }
 );
 
@@ -127,15 +164,16 @@ export const getAllProducts = catchAsyncError(
     const nextPage =
       products.length - (pageIndex + 1) * limitNum > 0 ? pageIndex + 2 : null;
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        products,
-        page: pageIndex + 1,
-        nextPage,
-        highestPrice,
-      });
+    const siteInfo = await siteInfoModel.findById(1);
+
+    res.status(200).json({
+      success: true,
+      products,
+      page: pageIndex + 1,
+      nextPage,
+      highestPrice,
+      categories: siteInfo?.categories,
+    });
   }
 );
 
