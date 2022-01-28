@@ -6,6 +6,7 @@ import { paymentApi } from "./sevices/payment";
 import userReducer from "./slices/userSlice";
 import cartReducer from "./slices/cartSlice";
 import orderReducer from "./slices/orderSlice";
+import detailedOrderReducer from "./slices/detailedOrder";
 import { ordersApi } from "./sevices/orders";
 // ...
 
@@ -18,6 +19,7 @@ export const store = configureStore({
     user: userReducer,
     cart: cartReducer,
     order: orderReducer,
+    detailedOrder: detailedOrderReducer,
   },
 
   middleware: (getDefaultMiddleware) =>
