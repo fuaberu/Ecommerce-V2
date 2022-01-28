@@ -30,7 +30,7 @@ const CartPage = () => {
         quantity: i.quantity,
         name: i.value.name,
         price: i.value.price,
-        image: i.value.mainImage.url,
+        image: i.value.mainImage,
         productId: i.value._id,
       });
     });

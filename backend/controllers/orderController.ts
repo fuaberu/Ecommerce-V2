@@ -6,7 +6,7 @@ import { subtractStock } from "../utils/order";
 
 //------------------- USER -------------------//
 
-//create Oreder
+//create Order
 export const createOrder = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     console.log(req.body);
