@@ -26,9 +26,18 @@ export const ordersApi = createApi({
     baseUrl: "http://localhost:4000/api/orders",
   }) as BaseQueryFn<string | FetchArgs, unknown, CustomError, {}>,
   endpoints: (builder) => ({
+    //admin
     getAllOrders: builder.query<OrdersResponse, void>({
       query: () => ({
-        url: `/`,
+        url: `/all`,
+        method: "GET",
+        credentials: "include",
+      }),
+    }),
+    //user
+    getMyOrders: builder.query<OrdersResponse, void>({
+      query: () => ({
+        url: `/me`,
         method: "GET",
         credentials: "include",
       }),
@@ -57,4 +66,5 @@ export const {
   useGetAOrderQuery,
   useGetAllOrdersQuery,
   useCreateOrderMutation,
+  useGetMyOrdersQuery,
 } = ordersApi;

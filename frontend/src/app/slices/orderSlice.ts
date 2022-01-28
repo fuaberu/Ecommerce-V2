@@ -17,6 +17,8 @@ export interface OrderItems {
 }
 
 export interface IOrder {
+  _id: string;
+  name: string;
   shippingInfo: ShippingInfo | null;
   orderItems: OrderItems[] | null;
   paymentInfo: { id: string | null; status: string | null };
@@ -31,6 +33,8 @@ const localShipping: ShippingInfo = localStorage.getItem("shipping")
   : null;
 
 const initialState: IOrder = {
+  _id: "",
+  name: "",
   shippingInfo: localShipping,
   orderItems: null,
   paymentInfo: { id: null, status: null },
@@ -46,9 +50,10 @@ export const orderSlice = createSlice({
   reducers: {
     setShipping: (
       state,
-      { payload }: { payload: { shipping: ShippingInfo } }
+      { payload }: { payload: { shipping: ShippingInfo; name: string } }
     ) => {
       state.shippingInfo = payload.shipping;
+      state.name = payload.name;
       localStorage.setItem("shipping", JSON.stringify(payload.shipping));
     },
     setOrderCart: (
