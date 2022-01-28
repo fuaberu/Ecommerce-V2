@@ -1,12 +1,16 @@
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
+  *{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
   body {
     position: relative;
     margin: 10vh 0 10vh 0;
     min-height: 80vh;
-    padding: 0;
-    box-sizing: border-box;
+    
     font-family: Open-Sans, Helvetica, Sans-Serif;
 
     scroll-behavior: smooth;
@@ -52,8 +56,11 @@ const GlobalStyle = createGlobalStyle`
      -moz-appearance: textfield;
           appearance: textfield;
   }
-  input[type=number]::-webkit-inner-spin-button, 
-  input[type=number]::-webkit-outer-spin-button { 
+  input[type="file"] {
+    display: none;
+}
+  input[type='number']::-webkit-inner-spin-button, 
+  input[type='number']::-webkit-outer-spin-button { 
   -webkit-appearance: none;
   }
 
