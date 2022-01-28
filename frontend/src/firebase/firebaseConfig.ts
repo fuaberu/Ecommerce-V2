@@ -15,15 +15,15 @@ const app = initializeApp(firebaseConfig);
 // Initialize storage
 const storage = getStorage(app);
 
-export const uploadPics = (pics: File[]) => {
-  let urls: string[] = [];
-  pics.forEach(async (pic) => {
+export const uploadPics = async (pics: File[]) => {
+  const promisses = pics.map((pic, index) => {
     const photoRef = ref(storage, pic.name);
-    const url = await getDownloadURL(photoRef);
-    urls.push(url);
-    uploadBytes(photoRef, pic).then((snapshot) => {
-      console.log("Uploaded a blob or file!");
-    });
+    return uploadBytes(photoRef, pic).then(() => getDownloadURL(photoRef));
   });
-  return urls;
+  try {
+    const urls = await Promise.all(promisses);
+    return urls;
+  } catch (error) {
+    console.log(error);
+  }
 };
