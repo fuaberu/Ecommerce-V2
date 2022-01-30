@@ -15,8 +15,8 @@ const ProductDetailePage = () => {
 
   const navigate = useNavigate();
   const { productId } = useParams();
-
   const { data, error, isLoading } = useGetAProductQuery(productId || "");
+
   const cart = useSelector((state: RootState) => state.cart);
 
   useEffect(() => {
@@ -51,6 +51,12 @@ const ProductDetailePage = () => {
     setProductQuantity(productQuantity + 1);
   };
 
+  const onQuantityChange = (value: React.ChangeEvent<HTMLInputElement>) => {
+    if (parseFloat(value.target.value) <= data.product.stock) {
+      setProductQuantity(parseFloat(value.target.value));
+    }
+  };
+
   console.log(data);
 
   return (
@@ -83,14 +89,12 @@ const ProductDetailePage = () => {
                 id="token"
                 inputMode="numeric"
                 value={productQuantity}
-                onChange={(value) =>
-                  setProductQuantity(parseFloat(value.target.value))
-                }
+                onChange={(value) => onQuantityChange(value)}
                 pattern="[0-9]*"
                 style={{
-                  width: `${data.product.stock.toString().length}ch`,
+                  width: "2rem",
+                  margin: "0 0.5rem",
                   height: "1.5rem",
-                  padding: "0 0.5rem",
                   border: "none",
                   textAlign: "center",
                 }}

@@ -38,8 +38,8 @@ const ProductsBoard = () => {
             <ProductContainer key={index}>
               <p style={{ flex: 1.5 }}>{product._id}</p>
               <p>{product.name}</p>
-              <p>{product.stock}</p>
               <p>{product.price}</p>
+              <p>{product.stock}</p>
               <div>
                 <button onClick={() => deleteData(product._id)}>
                   <BsTrash size={24} />

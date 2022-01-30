@@ -85,12 +85,12 @@ export const productsApi = createApi({
     }),
     setProductStock: builder.mutation<
       ProductResponse,
-      { productId: string; stock: number }
+      { data: { id: string; quantity: number }[] }
     >({
-      query: ({ productId, stock }) => ({
-        url: `/${productId}`,
+      query: ({ data }) => ({
+        url: `/stock`,
         method: "PUT",
-        stock,
+        body: data,
         credentials: "include",
       }),
     }),
@@ -133,4 +133,5 @@ export const {
   useCreateProductMutation,
   useDeleteProductMutation,
   useGetProductsCategoriesQuery,
+  useSetProductStockMutation,
 } = productsApi;

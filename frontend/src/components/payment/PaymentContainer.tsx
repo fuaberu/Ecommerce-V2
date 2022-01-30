@@ -16,6 +16,7 @@ import { useCreateOrderMutation } from "../../app/sevices/orders";
 import { clearOrder } from "../../app/slices/orderSlice";
 import Spinner from "../smallComponents/Spinner";
 import { useNavigate } from "react-router-dom";
+import { useSetProductStockMutation } from "../../app/sevices/products";
 
 const PaymentContainer = ({ clientSecret }: { clientSecret: string }) => {
   const stripe = useStripe();
@@ -28,6 +29,7 @@ const PaymentContainer = ({ clientSecret }: { clientSecret: string }) => {
   const user = useSelector((state: RootState) => state.user);
 
   const [createOrder] = useCreateOrderMutation();
+  const [updateProductsStock] = useSetProductStockMutation();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -101,6 +103,10 @@ const PaymentContainer = ({ clientSecret }: { clientSecret: string }) => {
 
     if (!error) {
       dispatch(clearCart());
+      const result = order.orderItems?.map((i) => {
+        return { id: i.productId, quantity: -i.quantity };
+      });
+      result && result.length > 0 && updateProductsStock({ data: result });
       setIsLoading(false);
       return;
     }

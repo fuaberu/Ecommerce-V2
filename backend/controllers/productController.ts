@@ -28,7 +28,7 @@ export const createProduct = catchAsyncError(
 );
 
 //update product - admin
-export const udpateProduct = catchAsyncError(
+export const updateProduct = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const exists = await productModel.findById(req.params.productId);
 
@@ -88,6 +88,25 @@ export const getProduct = catchAsyncError(
       return next(ApiError.badRequest("Product not found"));
     }
     res.status(200).json({ success: true, product });
+  }
+);
+
+// update stock
+export const updateProductStock = catchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    req.body.forEach(async (element: { id: string; quantity: number }) => {
+      const product = await productModel.findByIdAndUpdate(element.id, {
+        $inc: { stock: element.quantity },
+      });
+      console.log("products", product);
+      if (!product) {
+        return next(ApiError.badRequest("Product not found"));
+      }
+    });
+
+    res
+      .status(200)
+      .json({ success: true, message: "Products Updated successfully" });
   }
 );
 

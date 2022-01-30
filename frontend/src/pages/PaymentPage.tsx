@@ -22,7 +22,7 @@ const PaymentPage = () => {
   const { data: clientSecretData, error: secretError } = usePostPaymentQuery(
     {
       amount: order.totalPrice * 100,
-      currency: "eur",
+      currency: "usd",
     },
     { skip: skip }
   );

@@ -7,7 +7,8 @@ import {
   getAllCategories,
   getAllProducts,
   getProduct,
-  udpateProduct,
+  updateProduct,
+  updateProductStock,
 } from "../controllers/productController";
 import { authorizedRoles, isAuthenticated } from "../utils/isAuth";
 
@@ -29,7 +30,8 @@ ProductsRoutes.delete(
 );
 
 //AUTHENTICATED AREA
-ProductsRoutes.put("/:productId", isAuthenticated, udpateProduct);
+ProductsRoutes.put("/stock", isAuthenticated, updateProductStock);
+ProductsRoutes.put("/:productId", isAuthenticated, updateProduct);
 ProductsRoutes.post("/review", isAuthenticated, createReview);
 ProductsRoutes.delete("/review", isAuthenticated, deleteReview);
 ProductsRoutes.get("/categories", isAuthenticated, getAllCategories);
