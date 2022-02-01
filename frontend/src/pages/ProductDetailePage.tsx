@@ -7,6 +7,7 @@ import { useGetAProductQuery } from "../app/sevices/products";
 import { addProduct } from "../app/slices/cartSlice";
 import { RootState } from "../app/store";
 import Carousel from "../components/product/Carousel";
+import Spinner from "../components/smallComponents/Spinner";
 
 const ProductDetailePage = () => {
   const [rating, setRating] = useState(0);
@@ -23,7 +24,7 @@ const ProductDetailePage = () => {
     if (data && data.product.stock < 1) setProductQuantity(0);
   }, [data]);
 
-  if (!data) return <p>Nodata</p>;
+  if (!data) return <Spinner />;
 
   const addToCart = () => {
     const currentQantity =
@@ -39,6 +40,7 @@ const ProductDetailePage = () => {
     // Some logic
   };
   const minusQuantity = () => {
+    if (data.product.stock < 1) return;
     setProductQuantity(productQuantity > 1 ? productQuantity - 1 : 1);
   };
   const plusQuantity = () => {
@@ -56,8 +58,6 @@ const ProductDetailePage = () => {
       setProductQuantity(parseFloat(value.target.value));
     }
   };
-
-  console.log(data);
 
   return (
     <div>
@@ -102,7 +102,12 @@ const ProductDetailePage = () => {
               />
               <NumericButton onClick={() => plusQuantity()}>+</NumericButton>
             </div>
-            <button onClick={() => addToCart()}>add to cart</button>
+            <ActionButton
+              disabled={!data.product.stock}
+              onClick={() => addToCart()}
+            >
+              ADD TO CART
+            </ActionButton>
           </Flex>
           <p>
             Status:{" "}
@@ -118,7 +123,7 @@ const ProductDetailePage = () => {
             Description:
             <p>{data.product.description}</p>
           </div>
-          <AddReviewButton>Add a Review</AddReviewButton>
+          <ActionButton>Add a Review</ActionButton>
         </BuySection>
       </ProductContainer>
     </div>
@@ -126,10 +131,11 @@ const ProductDetailePage = () => {
 };
 
 const ImageSection = styled.section`
-  flex: 1;
+  flex: 1.3;
 `;
 const BuySection = styled.section`
   flex: 1;
+  line-height: 2.5rem;
 `;
 export const NumericButton = styled.button`
   width: 1.5rem;
@@ -137,17 +143,26 @@ export const NumericButton = styled.button`
   background-color: tomato;
 `;
 
-const AddReviewButton = styled.button`
+export const ActionButton = styled.button`
   background-color: tomato;
+  color: #fff;
+  padding: 0.5rem 2rem;
+  border-radius: 5px;
+  font-weight: 500;
+  &:disabled {
+    background-color: #ee7e6a;
+  }
 `;
 
 const ReviewsSection = styled.section``;
 
 const Flex = styled.div`
   display: flex;
+  justify-content: space-evenly;
 `;
 const ProductContainer = styled.div`
-  padding: 5%;
+  padding: 5vw;
+  gap: 1rem;
   @media (min-width: 768px) {
     display: flex;
     padding: 2rem;

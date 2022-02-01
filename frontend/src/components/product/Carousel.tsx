@@ -19,10 +19,10 @@ const Carousel = ({ images }: { images: string[] }) => {
   return (
     <ContainerDiv style={{ height: "400px" }}>
       <LeftArrow onClick={() => prevSlide()}>
-        <FaChevronLeft />
+        <FaChevronLeft size={36} />
       </LeftArrow>
       <RightArrow onClick={() => nextSlide()}>
-        <FaChevronRight />
+        <FaChevronRight size={36} />
       </RightArrow>
       <InnerDiv style={{ transform: `translateX(-${current * 100}%)` }}>
         {images.map((image, index) => (
@@ -55,15 +55,15 @@ const InnerDiv = styled.div`
   transition: 0.7s;
 `;
 const ItemDiv = styled.div`
-  height: 100%;
+  height: 93%;
   min-width: 100%;
   flex-grow: 1;
   flex-shrink: 1;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   img {
-    max-width: 100%;
+    max-width: 85%;
     max-height: 92%;
   }
 `;
@@ -73,14 +73,14 @@ const LeftArrow = styled.button`
   cursor: pointer;
   top: 50%;
   z-index: 2;
-  left: 5%;
+  left: 0;
 `;
 const RightArrow = styled.button`
   position: absolute;
   cursor: pointer;
   top: 50%;
   z-index: 2;
-  right: 5%;
+  right: 0;
 `;
 
 const ShowSlide = styled.div`

@@ -43,7 +43,11 @@ const UserOptions = ({ user }: { user: IUser | null }) => {
   };
   return (
     <Dial>
-      <button type="button" onClick={() => setOpen(!open)}>
+      <button
+        type="button"
+        style={{ padding: user?.profilePic.url ? 0 : 10 }}
+        onClick={() => setOpen(!open)}
+      >
         {user ? (
           <img src={user.profilePic.url} alt="user" />
         ) : (
@@ -55,9 +59,9 @@ const UserOptions = ({ user }: { user: IUser | null }) => {
           {user.role === "admin" && (
             <div
               onClick={dashBoard}
-              style={
-                open ? { transform: "scale(100%)" } : { transform: "scale(0%)" }
-              }
+              style={{
+                transform: open ? "scale(100%)" : "scale(0%)",
+              }}
             >
               <MdOutlineDashboard size={24} />
               <p>Dashboard</p>
@@ -65,27 +69,27 @@ const UserOptions = ({ user }: { user: IUser | null }) => {
           )}
           <div
             onClick={orders}
-            style={
-              open ? { transform: "scale(100%)" } : { transform: "scale(0%)" }
-            }
+            style={{
+              transform: open ? "scale(100%)" : "scale(0%)",
+            }}
           >
             <FaRegListAlt size={24} />
             <p>Orders</p>
           </div>
           <div
             onClick={account}
-            style={
-              open ? { transform: "scale(100%)" } : { transform: "scale(0%)" }
-            }
+            style={{
+              transform: open ? "scale(100%)" : "scale(0%)",
+            }}
           >
             <AiOutlineUser size={24} />
             <p>Profile</p>
           </div>
           <div
             onClick={logOut}
-            style={
-              open ? { transform: "scale(100%)" } : { transform: "scale(0%)" }
-            }
+            style={{
+              transform: open ? "scale(100%)" : "scale(0%)",
+            }}
           >
             <AiOutlineLogout size={24} />
             <p>Logout</p>
@@ -95,9 +99,9 @@ const UserOptions = ({ user }: { user: IUser | null }) => {
         <OptionsContainer style={open ? {} : { height: 0 }}>
           <div
             onClick={login}
-            style={
-              open ? { transform: "scale(100%)" } : { transform: "scale(0%)" }
-            }
+            style={{
+              transform: open ? "scale(100%)" : "scale(0%)",
+            }}
           >
             <AiOutlineLogin size={24} />
           </div>
@@ -118,10 +122,8 @@ const Dial = styled.div`
   z-index: 10;
   button {
     background-color: #ebedf1;
+    display: flex;
     border-radius: 50%;
-    height: 50px;
-    width: 50px;
-    padding: 0;
     &:hover {
       box-shadow: 0 0 10px 1px grey;
     }
@@ -138,6 +140,7 @@ const Dial = styled.div`
 const OptionsContainer = styled.div`
   div {
     transition: transform 0.2s;
+    background-color: #f6f9fd;
     cursor: pointer;
     width: 40px;
     height: 40px;
@@ -145,15 +148,18 @@ const OptionsContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 5px;
     p {
       display: none;
       position: absolute;
       right: 50px;
       padding: 0.3rem;
       border-radius: 5px;
+      background-color: #ebedf1;
     }
     &:hover {
       box-shadow: 0 0 10px 1px grey;
+      background-color: #ebedf1;
       p {
         display: block;
         box-shadow: 0 0 10px 1px #747373;

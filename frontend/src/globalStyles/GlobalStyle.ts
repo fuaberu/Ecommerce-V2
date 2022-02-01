@@ -5,15 +5,15 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+    font-family: Open-Sans, Helvetica, Sans-Serif;
+    scroll-behavior: smooth;
   }
   body {
     position: relative;
     margin: 10vh 0 10vh 0;
     min-height: 80vh;
     
-    font-family: Open-Sans, Helvetica, Sans-Serif;
 
-    scroll-behavior: smooth;
 
     /* scrollbar */
     ::-webkit-scrollbar {
@@ -58,13 +58,14 @@ const GlobalStyle = createGlobalStyle`
   }
   input[type="file"] {
     display: none;
-}
+  }   
   input[type='number']::-webkit-inner-spin-button, 
   input[type='number']::-webkit-outer-spin-button { 
   -webkit-appearance: none;
   }
-
-  
+  a{
+  text-decoration: none;
+  }
 `;
 
 export default GlobalStyle;

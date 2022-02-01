@@ -26,7 +26,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           />
           <span>{`${product.numOfReviews} Reviews`}</span>
         </div>
-        <span>{product.price}</span>
+        <span>{`$${product.price}`}</span>
       </CardLink>
     </Link>
   );
@@ -35,10 +35,18 @@ const ProductCard = ({ product }: { product: Product }) => {
 const CardLink = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: tomato;
+  background-color: rgb(245, 245, 245);
   transition: all 0.4s;
+  padding: 0 0.5rem;
+  p,
+  span:last-child {
+    margin: 0.5rem 0;
+  }
   img {
+    align-self: center;
     max-width: 100%;
+    height: 223px;
+    object-fit: cover;
   }
   &:hover {
     transform: scale(1.05);
