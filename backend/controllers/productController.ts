@@ -176,10 +176,11 @@ export const getAllProducts = catchAsyncError(
       return next(ApiError.badRequest("No Products Were Found"));
     }
 
-    let highestPrice = 0;
-    products.forEach((prod) =>
-      prod.price > highestPrice ? (highestPrice = prod.price) : null
-    );
+    const mostExpensiveProduct = await productModel
+      .find()
+      .sort({ price: -1 })
+      .limit(1);
+
     const nextPage =
       products.length - (pageIndex + 1) * limitNum > 0 ? pageIndex + 2 : null;
 
@@ -190,7 +191,7 @@ export const getAllProducts = catchAsyncError(
       products,
       page: pageIndex + 1,
       nextPage,
-      highestPrice,
+      highestPrice: mostExpensiveProduct[0].price || 0,
       categories: siteInfo?.categories,
     });
   }
