@@ -140,17 +140,20 @@ const BuySection = styled.section`
 export const NumericButton = styled.button`
   width: 1.5rem;
   height: 1.5rem;
-  background-color: tomato;
+  background-color: #fc6e55;
 `;
 
 export const ActionButton = styled.button`
-  background-color: tomato;
+  background-color: #fc6e55;
   color: #fff;
   padding: 0.5rem 2rem;
   border-radius: 5px;
   font-weight: 500;
   &:disabled {
     background-color: #ee7e6a;
+  }
+  &:hover {
+    background-color: #f74e30;
   }
 `;
 
