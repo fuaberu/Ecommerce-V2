@@ -45,11 +45,11 @@ const UserOptions = ({ user }: { user: IUser | null }) => {
     <Dial>
       <button
         type="button"
-        style={{ padding: user?.profilePic.url ? 0 : 10 }}
+        style={{ padding: user?.profilePic ? 0 : 10 }}
         onClick={() => setOpen(!open)}
       >
         {user ? (
-          <img src={user.profilePic.url} alt="user" />
+          <img src={user.profilePic} alt="user" />
         ) : (
           <AiOutlinePlus size={24} />
         )}

@@ -9,10 +9,7 @@ interface IUser {
   name: string;
   email: string;
   password: number;
-  profilePic: {
-    public_id: string;
-    url: string;
-  };
+  profilePic: string;
   role: string;
   passwordToken: string;
   createdAt: Date;
