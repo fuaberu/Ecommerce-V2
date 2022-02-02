@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useGetAllProductsQuery } from "../app/sevices/products";
 import ProductCard from "../components/product/ProductCard";
 import heroImage from "../assets/pexels-engin-akyurt.jpg";
+import Spinner from "../components/smallComponents/Spinner";
 
 const Homepage = () => {
   const shopRef = React.useRef<HTMLInputElement>(null);
@@ -27,12 +28,15 @@ const Homepage = () => {
       </HeroContainer>
       <ProductsContainer ref={shopRef}>
         <h2>Latest Products</h2>
-        <ProductsDisplay>
-          {data &&
-            data.products.map((prod, index) => {
+        {data && data?.products.length > 0 ? (
+          <ProductsDisplay>
+            {data.products.map((prod, index) => {
               return <ProductCard key={index} product={prod} />;
             })}
-        </ProductsDisplay>
+          </ProductsDisplay>
+        ) : (
+          <Spinner />
+        )}
       </ProductsContainer>
     </div>
   );
@@ -77,11 +81,13 @@ const HeroContainer = styled.section`
 `;
 
 const ProductsContainer = styled.section`
+  min-height: calc(100vh - ${(props) => props.theme.navHeight});
+  position: relative;
+  padding-bottom: 2rem;
   h2 {
     text-align: center;
-    padding: 1rem;
+    padding: 1.5rem;
   }
-  min-height: calc(100vh - ${(props) => props.theme.navHeight});
 `;
 
 export const ProductsDisplay = styled.div`

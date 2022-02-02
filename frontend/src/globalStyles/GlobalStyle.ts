@@ -6,15 +6,13 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     box-sizing: border-box;
     font-family: Open-Sans, Helvetica, Sans-Serif;
+    color: #444444;
     scroll-behavior: smooth;
   }
   body {
     position: relative;
     margin: 10vh 0 10vh 0;
     min-height: 80vh;
-    
-
-
     /* scrollbar */
     ::-webkit-scrollbar {
       width: 10px;
@@ -26,12 +24,7 @@ const GlobalStyle = createGlobalStyle`
     }
     ::-webkit-scrollbar-thumb {
       border-radius: 3px;
-    	background-image: -webkit-gradient(linear,
-									   left bottom,
-									   left top,
-									   color-stop(0.44, rgb(122,153,217)),
-									   color-stop(0.72, rgb(73,125,189)),
-									   color-stop(0.86, rgb(28,58,148)));
+    	background-color: #444444;
     }
   }
   header{

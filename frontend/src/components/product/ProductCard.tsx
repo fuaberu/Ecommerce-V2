@@ -37,7 +37,7 @@ const CardLink = styled.div`
   flex-direction: column;
   background-color: rgb(245, 245, 245);
   transition: all 0.4s;
-  padding: 0 0.5rem;
+  padding: 0.5rem;
   p,
   span:last-child {
     margin: 0.5rem 0;
