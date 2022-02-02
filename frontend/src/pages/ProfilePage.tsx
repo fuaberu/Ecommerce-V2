@@ -44,7 +44,7 @@ const ProfilePage = () => {
     <ProfileContainer>
       <section>
         <img
-          src={image ? image : user.profilePic.url}
+          src={image ? image : user.profilePic}
           alt={`${user.name} profile`}
         />
         <form onSubmit={onSubmit}>

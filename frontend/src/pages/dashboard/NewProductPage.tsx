@@ -8,7 +8,6 @@ import { uploadPics } from "../../firebase/firebaseConfig";
 import {
   useCreateProductMutation,
   useGetProductsCategoriesQuery,
-  useGetProductsListQuery,
 } from "../../app/sevices/products";
 
 const NewProductPage = () => {
@@ -34,10 +33,6 @@ const NewProductPage = () => {
       setFiles((prev) => [...prev, file]);
     });
   };
-
-  useEffect(() => {
-    console.log(categories);
-  }, [categories]);
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -96,7 +91,9 @@ const NewProductPage = () => {
         <datalist id="brow">
           {categories &&
             categories?.categories.map((op, index) => (
-              <option value={op}>{op}</option>
+              <option key={index} value={op}>
+                {op}
+              </option>
             ))}
         </datalist>
         <ImgInputLabel htmlFor="fileInput">
@@ -158,7 +155,7 @@ const SelectInput = styled.input`
   margin-bottom: 1rem;
 `;
 
-const ImgInputLabel = styled.label`
+export const ImgInputLabel = styled.label`
   border: 1px solid #ccc;
   display: inline-block;
   padding: 6px 12px;
