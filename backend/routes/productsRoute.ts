@@ -34,9 +34,9 @@ ProductsRoutes.put("/stock", isAuthenticated, updateProductStock);
 ProductsRoutes.put("/:productId", isAuthenticated, updateProduct);
 ProductsRoutes.post("/review", isAuthenticated, createReview);
 ProductsRoutes.delete("/review", isAuthenticated, deleteReview);
-ProductsRoutes.get("/categories", isAuthenticated, getAllCategories);
 
 //ALL USERS AREA
+ProductsRoutes.get("/categories", getAllCategories);
 ProductsRoutes.get("/", getAllProducts);
 ProductsRoutes.get("/:productId", getProduct);
 
