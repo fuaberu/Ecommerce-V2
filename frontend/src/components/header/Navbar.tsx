@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import { RootState } from "../../app/store";
+import SearchBar from "../product/SearchBar";
 import UserOptions from "./UserOptions";
 
 const Navbar = () => {
@@ -71,6 +72,7 @@ const Navbar = () => {
           <StoreName to="/">Store Name</StoreName>
         </button>
       </Div>
+      {pageWidth >= 768 && <SearchBar />}
       <NavContainer style={!open && pageWidth < 768 ? { height: 0 } : {}}>
         <LinkBtn
           onClick={() => setOpen(false)}

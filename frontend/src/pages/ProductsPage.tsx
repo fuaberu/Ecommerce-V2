@@ -1,25 +1,47 @@
-import React, { ReactPropTypes, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useGetProductsListQuery } from "../app/sevices/products";
+import {
+  useGetProductsCategoriesQuery,
+  useGetProductsListQuery,
+} from "../app/sevices/products";
 import ProductCard from "../components/product/ProductCard";
 import Spinner from "../components/smallComponents/Spinner";
 import Slider, { Handle, Range, SliderTooltip } from "rc-slider";
 import "rc-slider/assets/index.css";
+import { ActionButton } from "./ProductDetailePage";
+import SearchBar from "../components/product/SearchBar";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const ProductsPage = () => {
   const [page, setPage] = useState("0");
-  const [limit, setLimit] = useState("10");
+  const [limit, setLimit] = useState("2");
   const [minPrice, setMinPrice] = useState("0");
-  const [name, setName] = useState<string | undefined>(undefined);
   const [maxPrice, setMaxPrice] = useState<string | undefined>(undefined);
   const [category, setCategory] = useState<string | undefined>(undefined);
+  const [sort, setSort] = useState<string | undefined>(undefined);
   const [ratingQuery, setRatingQuery] = useState(0);
+  const [pageWidth, setPageWidth] = useState<number>(window.innerWidth);
 
   const [query, setQuery] = useState(
-    `?page=0&limit=${limit}&minPrice=${minPrice}`
+    `?page=${page}&limit=${limit}&minPrice=${minPrice}`
   );
   const [errorMessage, setErrorMessage] = useState<string>();
   const { data, error, isLoading, refetch } = useGetProductsListQuery(query);
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
+  const { data: categories } = useGetProductsCategoriesQuery();
+
+  useEffect(() => {
+    function handleResize() {
+      setPageWidth(window.innerWidth);
+    }
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (error && "data" in error) {
@@ -32,9 +54,9 @@ const ProductsPage = () => {
   const onApply = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     let paramsUrl = `?page=${page}&limit=${limit}&minPrice=${minPrice}`;
-    if (name) paramsUrl = paramsUrl + `&name=${name}`;
     if (maxPrice) paramsUrl = paramsUrl + `&maxPrice=${maxPrice}`;
     if (category) paramsUrl = paramsUrl + `&category=${category}`;
+    if (sort) paramsUrl = paramsUrl + `&sort=${sort}`;
     if (ratingQuery) paramsUrl = paramsUrl + `&rating=${ratingQuery}`;
 
     setQuery(paramsUrl);
@@ -50,22 +72,32 @@ const ProductsPage = () => {
 
   const nextPage = () => {
     if (!data?.nextPage) return;
+    const nextPageNum = (Number(page) + 1).toString();
+    setPage(nextPageNum);
     const regex = /page=(.*?)&/i;
-    const nextPageString = query.replace(regex, `page=${data.page + 1}&`);
+    const nextPageString = query.replace(regex, `page=${nextPageNum}&`);
     setQuery(nextPageString);
   };
   const prevPage = () => {
     if (!data || data.page < 1) return;
+    const prevPageNum = (Number(page) - 1).toString();
+    setPage(prevPageNum);
     const regex = /page=(.*?)&/i;
-    const prevPageString = query.replace(regex, `page=${data.page - 1}&`);
+    const prevPageString = query.replace(regex, `page=${prevPageNum}&`);
+    setQuery(prevPageString);
+  };
+  const pressPage = (page: number) => {
+    const regex = /page=(.*?)&/i;
+    const prevPageString = query.replace(regex, `page=${page}&`);
     setQuery(prevPageString);
   };
 
   return isLoading || !data ? (
     <Spinner />
   ) : (
-    <div>
+    <Container>
       <h2>Products</h2>
+      {pageWidth < 768 && <SearchBar />}
       <ProductsContainer>
         <FormContainer onSubmit={(e) => onApply(e)}>
           <div className="form-div">
@@ -96,29 +128,48 @@ const ProductsPage = () => {
               step={20}
             />
           </div>
-          <select name="categories">
+          <SelectInput onChange={(e) => setCategory(e.target.value)}>
             <option value="">Categories</option>
-          </select>
-          <button type="submit">aplly</button>
+            {categories &&
+              categories?.categories.map((op, index) => (
+                <option value={op} key={index}>
+                  {op}
+                </option>
+              ))}
+          </SelectInput>
+          <SelectInput onChange={(e) => setSort(e.target.value)}>
+            <option value="">Sort by</option>
+            <option value="priceL>H">Price: Low to High</option>
+            <option value="priceH>L">Price: High to Low</option>
+            <option value="review">Avg. Customer Review</option>
+            <option value="newest">Newest Arrivals</option>
+          </SelectInput>
+          <ActionButton type="submit">Aplly</ActionButton>
         </FormContainer>
-        {!errorMessage ? (
-          <ProductsArea>
-            {data.products.map((prod, index) => {
-              return <ProductCard key={index} product={prod} />;
-            })}
-          </ProductsArea>
+        {!isLoading ? (
+          <section style={{ flex: 4 }}>
+            <ProductsArea>
+              {data.products.map((prod, index) => {
+                return <ProductCard key={index} product={prod} />;
+              })}
+            </ProductsArea>
+            <PaginationContainer>
+              <button disabled={data.page <= 1 || isLoading} onClick={prevPage}>
+                <FaChevronLeft size={18} />
+              </button>
+              <span>{error ? 0 : data.page}</span>
+              <button disabled={!data.nextPage || isLoading} onClick={nextPage}>
+                <FaChevronRight size={18} />
+              </button>
+            </PaginationContainer>
+          </section>
         ) : (
-          <div style={{ flex: 3 }}>
-            <p>{errorMessage}</p>
-          </div>
+          <section style={{ flex: 4 }}>
+            <Spinner />
+          </section>
         )}
       </ProductsContainer>
-      <PaginationContainer>
-        <button>Previous</button>
-        <div>{error ? 0 : data.page}</div>
-        <button onClick={() => nextPage()}>Next</button>
-      </PaginationContainer>
-    </div>
+    </Container>
   );
 };
 
@@ -137,12 +188,18 @@ const handle = (props: any) => {
   );
 };
 
+const Container = styled.div`
+  h2 {
+    text-align: center;
+    padding: 0.7rem;
+  }
+`;
+
 const ProductsArea = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
   padding: 1rem;
-  flex: 3;
   @media (min-width: 768px) {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -154,6 +211,8 @@ const ProductsArea = styled.div`
 const FormContainer = styled.form`
   padding: 1rem;
   flex: 1;
+  display: flex;
+  flex-direction: column;
   .form-div {
     margin-bottom: 2rem;
   }
@@ -165,6 +224,25 @@ const ProductsContainer = styled.div`
 `;
 const PaginationContainer = styled.div`
   display: flex;
+  justify-content: center;
+  button,
+  span {
+    display: flex;
+  }
+  span {
+    margin: 0 10px;
+  }
+`;
+const SelectInput = styled.select`
+  height: 28px;
+  padding-left: 40px;
+  padding-right: 24px;
+  outline: none;
+  border: 1px solid black;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 380px;
+  margin-bottom: 1rem;
 `;
 
 export default ProductsPage;
