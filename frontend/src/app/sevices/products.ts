@@ -62,7 +62,7 @@ interface CustomError {
 export const productsApi = createApi({
   reducerPath: "productsApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://192.168.29.21/api/products",
+    baseUrl: "/api/products",
   }) as BaseQueryFn<string | CustomError | FetchArgs, unknown, CustomError, {}>,
   endpoints: (builder) => ({
     //all
