@@ -23,7 +23,7 @@ interface CustomError {
 export const ordersApi = createApi({
   reducerPath: "ordersApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:4000/api/orders",
+    baseUrl: "http://192.168.29.21/api/orders",
   }) as BaseQueryFn<string | FetchArgs, unknown, CustomError, {}>,
   endpoints: (builder) => ({
     //admin

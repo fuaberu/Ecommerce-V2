@@ -11,7 +11,7 @@ import OrdersRoutes from "./routes/ordersRoute";
 import PaymentRoutes from "./routes/paymentRoute";
 
 //import frontend path
-const path = require("path");
+import path from "path";
 
 const app = express();
 
@@ -28,13 +28,6 @@ process.env.MONGO_URL &&
   });
 
 //middlewares
-app.use(
-  cors({
-    credentials: true,
-    origin: ["http://localhost:3000"],
-    methods: "GET,PUT,POST,DELETE",
-  })
-);
 app.use(express.json());
 app.use(cookieParser());
 
