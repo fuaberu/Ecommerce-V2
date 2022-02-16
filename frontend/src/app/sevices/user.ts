@@ -35,11 +35,7 @@ interface CustomError {
 export const usersApi = createApi({
   reducerPath: "usersApi",
   baseQuery: fetchBaseQuery({
-<<<<<<< HEAD
     baseUrl: "https://192.168.29.21/api/users",
-=======
-    baseUrl: "http://192.168.29.21/api/users",
->>>>>>> cc4be0c067257b437e605b822b73f766561dc785
   }) as BaseQueryFn<string | FetchArgs, unknown, CustomError, {}>,
   endpoints: (builder) => ({
     registerUser: builder.mutation<
