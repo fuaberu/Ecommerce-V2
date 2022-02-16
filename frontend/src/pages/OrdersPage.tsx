@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { useGetMyOrdersQuery } from "../app/sevices/orders";
 import { setDetailedOrder } from "../app/slices/detailedOrder";
 import { IOrder } from "../app/slices/orderSlice";
+import Spinner from "../components/smallComponents/Spinner";
 
 const OrdersPage = () => {
   const { data, error, isLoading } = useGetMyOrdersQuery();
@@ -19,6 +20,7 @@ const OrdersPage = () => {
 
   return (
     <OrderTabel>
+      {isLoading && <Spinner />}
       {data?.orders.map((o, i) => (
         <button type="button" key={i} onClick={() => handleClick(o)}>
           <p>{o.paymentInfo.id}</p>
@@ -27,6 +29,7 @@ const OrdersPage = () => {
           <p>{o.totalPrice}</p>
         </button>
       ))}
+      {error && <p>{error}</p>}
     </OrderTabel>
   );
 };

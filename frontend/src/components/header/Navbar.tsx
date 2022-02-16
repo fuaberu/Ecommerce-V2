@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import { RootState } from "../../app/store";
 import SearchBar from "../product/SearchBar";
 import UserOptions from "./UserOptions";

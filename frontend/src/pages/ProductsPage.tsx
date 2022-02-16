@@ -26,7 +26,7 @@ const ProductsPage = () => {
     `?page=${page}&limit=${limit}&minPrice=${minPrice}`
   );
   const [errorMessage, setErrorMessage] = useState<string>();
-  const { data, error, isLoading, refetch } = useGetProductsListQuery(query);
+  const { data, error, isLoading } = useGetProductsListQuery(query);
   useEffect(() => {
     console.log(data);
   }, [data]);
@@ -86,11 +86,6 @@ const ProductsPage = () => {
     const prevPageString = query.replace(regex, `page=${prevPageNum}&`);
     setQuery(prevPageString);
   };
-  const pressPage = (page: number) => {
-    const regex = /page=(.*?)&/i;
-    const prevPageString = query.replace(regex, `page=${page}&`);
-    setQuery(prevPageString);
-  };
 
   return isLoading || !data ? (
     <Spinner />
@@ -144,6 +139,11 @@ const ProductsPage = () => {
             <option value="review">Avg. Customer Review</option>
             <option value="newest">Newest Arrivals</option>
           </SelectInput>
+          <SelectInput onChange={(e) => setLimit(e.target.value)}>
+            <option value="12">Results per page</option>
+            <option value="24">24</option>
+            <option value="48">48</option>
+          </SelectInput>
           <ActionButton type="submit">Aplly</ActionButton>
         </FormContainer>
         {!isLoading ? (
@@ -168,6 +168,7 @@ const ProductsPage = () => {
             <Spinner />
           </section>
         )}
+        {errorMessage && <p>{errorMessage}</p>}
       </ProductsContainer>
     </Container>
   );

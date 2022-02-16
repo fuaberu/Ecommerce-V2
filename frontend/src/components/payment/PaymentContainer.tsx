@@ -1,20 +1,15 @@
 import React, { useEffect, useState } from "react";
-import Input from "../form/Input";
-import { FaRegCreditCard, FaRegCalendarAlt, FaKey } from "react-icons/fa";
 import {
-  CardElement,
   PaymentElement,
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
-import { usePostPaymentQuery } from "../../app/sevices/payment";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import styled from "styled-components";
 import { clearCart } from "../../app/slices/cartSlice";
 import { useCreateOrderMutation } from "../../app/sevices/orders";
 import { clearOrder } from "../../app/slices/orderSlice";
-import Spinner from "../smallComponents/Spinner";
 import { useNavigate } from "react-router-dom";
 import { useSetProductStockMutation } from "../../app/sevices/products";
 
@@ -70,7 +65,7 @@ const PaymentContainer = ({ clientSecret }: { clientSecret: string }) => {
           break;
       }
     });
-  }, [stripe]);
+  }, [stripe, clientSecret, order, createOrder, dispatch, navigate]);
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();

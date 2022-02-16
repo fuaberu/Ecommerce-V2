@@ -33,7 +33,7 @@ const PaymentPage = () => {
     } else {
       setSkip(true);
     }
-  }, [stripeKeyData]);
+  }, [stripeKeyData, order]);
 
   useEffect(() => {
     stripeKeyData && setStripeKey(stripeKeyData.stripeApiKey);
@@ -57,6 +57,8 @@ const PaymentPage = () => {
           <PaymentContainer clientSecret={clientSecret} />
         </Elements>
       )}
+      {keyError && <p>{keyError}</p>}
+      {secretError && <p>{secretError}</p>}
     </Container>
   );
 };

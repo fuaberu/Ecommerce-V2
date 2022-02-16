@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { IconContainer, InputContainer, InputInterface } from "./Input";
+import { IconContainer, InputContainer } from "./Input";
 import { AiOutlineEye, AiOutlineLock } from "react-icons/ai";
 import styled from "styled-components";
 

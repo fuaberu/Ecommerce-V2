@@ -16,7 +16,7 @@ const ProductDetailePage = () => {
 
   const navigate = useNavigate();
   const { productId } = useParams();
-  const { data, error, isLoading } = useGetAProductQuery(productId || "");
+  const { data } = useGetAProductQuery(productId || "");
 
   const cart = useSelector((state: RootState) => state.cart);
 
@@ -125,6 +125,7 @@ const ProductDetailePage = () => {
           </div>
           <ActionButton>Add a Review</ActionButton>
         </BuySection>
+        <ReviewsSection></ReviewsSection>
       </ProductContainer>
     </div>
   );

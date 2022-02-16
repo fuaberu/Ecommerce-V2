@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Product } from "../sevices/products";
 import { IOrder } from "./orderSlice";
 
 export interface DetailedOrderState {

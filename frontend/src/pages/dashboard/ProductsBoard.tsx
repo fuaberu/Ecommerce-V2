@@ -12,7 +12,7 @@ const ProductsBoard = () => {
 
   const { data, error, isLoading, refetch } = useGetAllProductsQuery();
 
-  const [deleteProduct, { isLoading: isDeleting, error: deleteError }] =
+  const [deleteProduct, { isLoading: isDeleting}] =
     useDeleteProductMutation();
 
   useEffect(() => {

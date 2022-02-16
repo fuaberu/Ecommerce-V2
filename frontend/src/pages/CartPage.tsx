@@ -5,7 +5,6 @@ import styled from "styled-components";
 import { OrderItems, setOrderInfo } from "../app/slices/orderSlice";
 import { RootState } from "../app/store";
 import CartItem from "../components/cart/CartItem";
-import Spinner from "../components/smallComponents/Spinner";
 import { ActionButton } from "./ProductDetailePage";
 
 const CartPage = () => {

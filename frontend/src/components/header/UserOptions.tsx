@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { IUser } from "../../app/slices/userSlice";
@@ -11,14 +11,14 @@ import {
 import { FaRegListAlt } from "react-icons/fa";
 import { MdOutlineDashboard } from "react-icons/md";
 import { useLogOutUserMutation } from "../../app/sevices/user";
+import Spinner from "../smallComponents/Spinner";
 
 const UserOptions = ({ user }: { user: IUser | null }) => {
   const [open, setOpen] = useState(false);
 
   const navigate = useNavigate();
 
-  const [logoutUser, { isLoading: loadingUser, error: loadError }] =
-    useLogOutUserMutation();
+  const [logoutUser, { isLoading: loadingUser }] = useLogOutUserMutation();
 
   const dashBoard = () => {
     setOpen(false);
@@ -91,7 +91,7 @@ const UserOptions = ({ user }: { user: IUser | null }) => {
               transform: open ? "scale(100%)" : "scale(0%)",
             }}
           >
-            <AiOutlineLogout size={24} />
+            {loadingUser ? <Spinner /> : <AiOutlineLogout size={24} />}
             <p>Logout</p>
           </div>
         </OptionsContainer>

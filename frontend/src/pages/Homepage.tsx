@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useGetAllProductsQuery } from "../app/sevices/products";
 import ProductCard from "../components/product/ProductCard";
@@ -20,7 +20,7 @@ const Homepage = () => {
   return (
     <div>
       <HeroContainer>
-        <img src={heroImage} />
+        <img src={heroImage} alt="page background" />
         <div>
           <h2>New Products</h2>
           <button onClick={scrollToShop}>Shop now</button>
@@ -28,7 +28,7 @@ const Homepage = () => {
       </HeroContainer>
       <ProductsContainer ref={shopRef}>
         <h2>Latest Products</h2>
-        {data && data?.products.length > 0 ? (
+        {!isLoading && data && data?.products.length > 0 ? (
           <ProductsDisplay>
             {data.products.map((prod, index) => {
               return <ProductCard key={index} product={prod} />;

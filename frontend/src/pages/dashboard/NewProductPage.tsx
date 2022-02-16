@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Input from "../../components/form/Input";
 import { MdInput } from "react-icons/md";
 import { BsCurrencyDollar, BsBoxSeam } from "react-icons/bs";
@@ -19,7 +19,7 @@ const NewProductPage = () => {
   const [images, setImages] = useState<string[]>([]);
   const [files, setFiles] = useState<File[]>([]);
 
-  const [createProduct, { isLoading, error }] = useCreateProductMutation();
+  const [createProduct] = useCreateProductMutation();
   const { data: categories } = useGetProductsCategoriesQuery();
 
   const onImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {

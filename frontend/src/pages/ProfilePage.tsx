@@ -14,7 +14,7 @@ const ProfilePage = () => {
   const [image, setImage] = useState("");
   const { user } = useSelector((state: RootState) => state.user);
 
-  const [updatePicture, { isLoading, error }] = useUpdateProfilePicMutation();
+  const [updatePicture, { isLoading }] = useUpdateProfilePicMutation();
 
   const onImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.currentTarget.files) return;
@@ -60,6 +60,7 @@ const ProfilePage = () => {
           </ImgInputLabel>
           <ActionButton type="submit">Apply change</ActionButton>
         </form>
+        {isLoading && <Spinner />}
       </section>
       <section>
         <h3>Full Name</h3>

@@ -3,6 +3,7 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Product, useGetProductsListQuery } from "../../app/sevices/products";
+import Spinner from "../smallComponents/Spinner";
 
 const SearchBar = () => {
   const [results, setResults] = useState<Product[]>([]);
@@ -10,7 +11,7 @@ const SearchBar = () => {
 
   const navigate = useNavigate();
 
-  const { data, error, isLoading, refetch } = useGetProductsListQuery(
+  const { data, isLoading } = useGetProductsListQuery(
     `?name=${name}&limit=10`,
     { skip: !name }
   );
@@ -33,7 +34,7 @@ const SearchBar = () => {
         onChange={(e) => setName(e.target.value)}
       />
       <SearchButton>
-        <AiOutlineSearch size={24} />
+        {isLoading ? <Spinner /> : <AiOutlineSearch size={24} />}
       </SearchButton>
       <div>
         {name &&
