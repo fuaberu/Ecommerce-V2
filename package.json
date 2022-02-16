@@ -5,7 +5,7 @@
   "main": "backend/server.ts",
   "scripts": {
     "dev": "nodemon backend/server.ts",
-    "start": "tsc --project backend/server.ts",
+    "start": "ts-node backend/server.ts",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend"
   },
   "author": "Kevin Alves Fabel",
