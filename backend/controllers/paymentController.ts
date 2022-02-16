@@ -2,8 +2,12 @@ import { NextFunction, Request, Response } from "express";
 import ApiError from "../utils/apiError";
 import catchAsyncError from "../utils/error";
 import Stripe from "stripe";
-import dotenv from "dotenv";
-dotenv.config({ path: "backend/config/config.env" });
+
+//config
+if (process.env.NODE_ENV !== "PRODUCTION") {
+  //DEV env
+  require("dotenv").config({ path: "backend/config/config.env" });
+}
 
 //initiate stripe
 const stripeEnvKey = process.env.STRIPE_SECRET as string;

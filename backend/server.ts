@@ -1,5 +1,4 @@
-import express, { Errback } from "express";
-import dotenv from "dotenv";
+import express from "express";
 import { connect } from "mongoose";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -11,10 +10,17 @@ import UserRoutes from "./routes/userRoute";
 import OrdersRoutes from "./routes/ordersRoute";
 import PaymentRoutes from "./routes/paymentRoute";
 
+//import frontend path
+const path = require("path");
+
 const app = express();
 
 //config
-dotenv.config({ path: "backend/config/config.env" });
+if (process.env.NODE_ENV !== "PRODUCTION") {
+  //DEV env
+  require("dotenv").config({ path: "backend/config/config.env" });
+}
+
 //connect to database
 process.env.MONGO_URL &&
   connect(process.env.MONGO_URL, () => {
@@ -33,11 +39,16 @@ app.use(express.json());
 app.use(cookieParser());
 
 //routes
-app.get("/", (req, res) => res.send("Express + TypeScript Server"));
 app.use("/api/products", ProductsRoutes);
 app.use("/api/users", UserRoutes);
 app.use("/api/orders", OrdersRoutes);
 app.use("/api/payment", PaymentRoutes);
+
+app.use(express.static(path.join(__dirname, "../frontend/build")));
+
+app.get("*", (req, res) =>
+  res.sendFile(path.resolve(__dirname, "../frontend/build/index.html"))
+);
 
 //error handling
 app.use(errorHandling);
