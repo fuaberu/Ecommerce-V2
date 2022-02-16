@@ -23,7 +23,7 @@ interface PaymentBody {
 export const paymentApi = createApi({
   reducerPath: "paymentApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:4000/api/payment",
+    baseUrl: "/api/payment",
   }) as BaseQueryFn<string | FetchArgs, unknown, {}>,
   endpoints: (builder) => ({
     getStripeKey: builder.query<GetkeyResponse, void>({
