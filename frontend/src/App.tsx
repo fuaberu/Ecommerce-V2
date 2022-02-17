@@ -58,19 +58,19 @@ function App() {
             <Route
               path="account"
               element={
-                user.user ? <ProfilePage /> : <Navigate replace to="/login" />
+                !loadError ? <ProfilePage /> : <Navigate replace to="/login" />
               }
             />
             <Route
               path="orders"
               element={
-                user.user ? <OrdersPage /> : <Navigate replace to="/login" />
+                !loadError ? <OrdersPage /> : <Navigate replace to="/login" />
               }
             />
             <Route
               path="orders/:id"
               element={
-                user.user ? (
+                !loadError ? (
                   <OrderDetailesPage />
                 ) : (
                   <Navigate replace to="/login" />
@@ -81,30 +81,23 @@ function App() {
               <Route
                 path="shipping"
                 element={
-                  user.user ? (
-                    <ShippingPage />
-                  ) : (
-                    <Navigate replace to="/login" />
-                  )
+                  user.user ? <ShippingPage /> : <Navigate replace to="/cart" />
                 }
               />
               <Route
                 path="order"
                 element={
-                  user.user ? (
-                    <ConfirmOrder />
-                  ) : (
-                    <Navigate replace to="/login" />
-                  )
+                  user.user ? <ConfirmOrder /> : <Navigate replace to="/cart" />
                 }
               />
               <Route
                 path="payment"
                 element={
-                  user.user ? <PaymentPage /> : <Navigate replace to="/login" />
+                  user.user ? <PaymentPage /> : <Navigate replace to="/cart" />
                 }
               />
             </Route>
+            {/* admin paths */}
             <Fragment>
               <Route
                 path="dashboard"
