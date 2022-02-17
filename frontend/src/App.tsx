@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 import { useLoadUserMutation } from "./app/sevices/user";
 import { RootState } from "./app/store";
 import CheckOutSteps from "./components/order/CheckOutSteps";
@@ -53,30 +53,122 @@ function App() {
           <Route path=":productId" element={<ProductDetailePage />} />
           <Route path="login" element={<LoginSignUp />} />
           <Route path="products" element={<ProductsPage />} />
-          {user.user && (
-            //protected paths
+          {/* protected paths */}
+          <Fragment>
+            <Route
+              path="account"
+              element={
+                user.user ? <ProfilePage /> : <Navigate replace to="/login" />
+              }
+            />
+            <Route
+              path="orders"
+              element={
+                user.user ? <OrdersPage /> : <Navigate replace to="/login" />
+              }
+            />
+            <Route
+              path="orders/:id"
+              element={
+                user.user ? (
+                  <OrderDetailesPage />
+                ) : (
+                  <Navigate replace to="/login" />
+                )
+              }
+            />
+            <Route path="checkout" element={<CheckOutSteps />}>
+              <Route
+                path="shipping"
+                element={
+                  user.user ? (
+                    <ShippingPage />
+                  ) : (
+                    <Navigate replace to="/login" />
+                  )
+                }
+              />
+              <Route
+                path="order"
+                element={
+                  user.user ? (
+                    <ConfirmOrder />
+                  ) : (
+                    <Navigate replace to="/login" />
+                  )
+                }
+              />
+              <Route
+                path="payment"
+                element={
+                  user.user ? <PaymentPage /> : <Navigate replace to="/login" />
+                }
+              />
+            </Route>
             <Fragment>
-              <Route path="account" element={<ProfilePage />} />
-              <Route path="orders" element={<OrdersPage />} />
-              <Route path="orders/:id" element={<OrderDetailesPage />} />
-              <Route path="checkout" element={<CheckOutSteps />}>
-                <Route path="shipping" element={<ShippingPage />} />
-                <Route path="order" element={<ConfirmOrder />} />
-                <Route path="payment" element={<PaymentPage />} />
+              <Route
+                path="dashboard"
+                element={
+                  user.user && user.user.role === "admin" ? (
+                    <Dashboard />
+                  ) : (
+                    <Navigate replace to="/login" />
+                  )
+                }
+              >
+                <Route
+                  path="products"
+                  element={
+                    user.user && user.user.role === "admin" ? (
+                      <ProductsBoard />
+                    ) : (
+                      <Navigate replace to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="products/new"
+                  element={
+                    user.user && user.user.role === "admin" ? (
+                      <NewProductPage />
+                    ) : (
+                      <Navigate replace to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="users"
+                  element={
+                    user.user && user.user.role === "admin" ? (
+                      <UsersBoard />
+                    ) : (
+                      <Navigate replace to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="orders"
+                  element={
+                    user.user && user.user.role === "admin" ? (
+                      <OrdersBoard />
+                    ) : (
+                      <Navigate replace to="/login" />
+                    )
+                  }
+                />
+                <Route
+                  path="reviews"
+                  element={
+                    user.user && user.user.role === "admin" ? (
+                      <ReviewsBoard />
+                    ) : (
+                      <Navigate replace to="/login" />
+                    )
+                  }
+                />
               </Route>
-              {user.user.role === "admin" && (
-                <Fragment>
-                  <Route path="dashboard" element={<Dashboard />}>
-                    <Route path="products" element={<ProductsBoard />} />
-                    <Route path="products/new" element={<NewProductPage />} />
-                    <Route path="users" element={<UsersBoard />} />
-                    <Route path="orders" element={<OrdersBoard />} />
-                    <Route path="reviews" element={<ReviewsBoard />} />
-                  </Route>
-                </Fragment>
-              )}
             </Fragment>
-          )}
+          </Fragment>
 
           <Route path="cart" element={<CartPage />} />
           {/* //shiping layout */}
