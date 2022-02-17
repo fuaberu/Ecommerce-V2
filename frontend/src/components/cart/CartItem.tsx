@@ -34,17 +34,17 @@ const CartItem = ({ item }: { item: ICartItem }) => {
 
   return (
     <ItemDiv>
-      <div>
-        <img src={item.value.mainImage} alt="" />
+      <div style={{ flex: 1 }}>
+        <img style={{ maxWidth: "100%" }} src={item.value.mainImage} alt="" />
       </div>
-      <div style={{ flexDirection: "column" }}>
+      <div style={{ flexDirection: "column", flex: 1 }}>
         <Link to={`/${item.value._id}`}>{item.value.name}</Link>
-        <button onClick={() => removeItem()}>Remove</button>
+        <RemoveBtn onClick={() => removeItem()}>Remove</RemoveBtn>
       </div>
-      <div>
+      <div style={{ flex: 1 }}>
         <span>{`$${item.value.price}`}</span>
       </div>
-      <div>
+      <div style={{ flex: 1 }}>
         <NumericButton onClick={() => minusQuantity()}>-</NumericButton>
         <input
           type="number"
@@ -58,7 +58,7 @@ const CartItem = ({ item }: { item: ICartItem }) => {
         />
         <NumericButton onClick={() => plusQuantity()}>+</NumericButton>
       </div>
-      <div>
+      <div style={{ flex: 1 }}>
         <span>{`$${item.quantity * item.value.price}`}</span>
       </div>
     </ItemDiv>
@@ -69,7 +69,8 @@ const ItemDiv = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 15vh;
+  max-height: 15vh;
+  margin: 0.5rem 0;
   input {
     width: 5ch;
     height: 1.5rem;
@@ -91,6 +92,13 @@ const ItemDiv = styled.div`
     :last-child {
       justify-content: end;
     }
+  }
+`;
+
+const RemoveBtn = styled.button`
+  margin-top: 0.5rem;
+  &:hover {
+    color: red;
   }
 `;
 

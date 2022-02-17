@@ -147,7 +147,7 @@ const ProductsPage = () => {
           <ActionButton type="submit">Aplly</ActionButton>
         </FormContainer>
         {!isLoading ? (
-          <section style={{ flex: 4 }}>
+          <section style={{ flex: 4, paddingBottom: "1rem" }}>
             <ProductsArea>
               {data.products.map((prod, index) => {
                 return <ProductCard key={index} product={prod} />;
@@ -236,8 +236,7 @@ const PaginationContainer = styled.div`
 `;
 const SelectInput = styled.select`
   height: 28px;
-  padding-left: 40px;
-  padding-right: 24px;
+  text-align: center;
   outline: none;
   border: 1px solid black;
   border-radius: 5px;

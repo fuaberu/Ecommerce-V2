@@ -21,31 +21,58 @@ const OrdersPage = () => {
   return (
     <OrderTabel>
       {isLoading && <Spinner />}
-      {data?.orders.map((o, i) => (
-        <button type="button" key={i} onClick={() => handleClick(o)}>
-          <p>{o.paymentInfo.id}</p>
-          <p>{o.orderStatus}</p>
-          <p>{o.orderItems?.reduce((a, b) => a + b.quantity, 0)}</p>
-          <p>{o.totalPrice}</p>
-        </button>
-      ))}
+      <h2>My Orders</h2>
+      <table>
+        <tr>
+          <th>Payment Id</th>
+          <th>Status</th>
+          <th>Items</th>
+          <th>Price</th>
+        </tr>
+        {data?.orders.map((o, i) => (
+          <tr key={i} onClick={() => handleClick(o)}>
+            <td>{o.paymentInfo.id}</td>
+            <td style={o.orderStatus === "paid" ? { color: "green" } : {}}>
+              {o.orderStatus}
+            </td>
+            <td>{o.orderItems?.reduce((a, b) => a + b.quantity, 0)}</td>
+            <td>{o.totalPrice + "$"}</td>
+          </tr>
+        ))}
+      </table>
       {error && <p>{error}</p>}
     </OrderTabel>
   );
 };
 
 const OrderTabel = styled.div`
-  button {
-    display: flex;
-    justify-content: space-between;
+  h2 {
+    text-align: center;
+    padding: 1rem;
+  }
+  table {
     width: 100%;
-    &:hover {
-      box-shadow: 0 0 10px 1px #747373;
-      border-radius: 5px;
+    border-spacing: 0 10px;
+    td {
+      &:not(:first-child) {
+        text-align: center;
+      }
     }
-    p {
-      flex: 1;
-      text-align: center;
+    tr {
+      &:not(:first-child) {
+        padding: 1rem;
+        &:hover {
+          box-shadow: 0 0 10px 1px #747373;
+          border-radius: 5px;
+          cursor: pointer;
+        }
+      }
+    }
+    @media screen and (min-width: 768px) {
+      border-spacing: 10vw 10px;
+      td {
+        text-align: center;
+      }
     }
   }
 `;

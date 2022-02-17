@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setShipping } from "../app/slices/orderSlice";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "../app/store";
+import { ActionButton } from "./ProductDetailePage";
 
 const ShippingPage = () => {
   const { shippingInfo } = useSelector((state: RootState) => state.order);
@@ -46,7 +47,7 @@ const ShippingPage = () => {
   };
 
   return (
-    <div>
+    <Container>
       <form onSubmit={(e) => onSubmit(e)} action="">
         <InputSelect
           name="country"
@@ -110,14 +111,23 @@ const ShippingPage = () => {
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
         />
-        <button type="submit">Continue</button>
+        <ActionButton type="submit">Continue</ActionButton>
       </form>
-    </div>
+    </Container>
   );
 };
 
+const Container = styled.div`
+  padding: 1rem 10vw;
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+`;
+
 const InputSelect = styled.select`
   padding: 0.5rem 1rem;
+  margin: 5px 0;
   width: 100%;
   border: 1px solid #000;
   border-radius: 5px;
@@ -138,6 +148,7 @@ const InputSelect = styled.select`
 
 const ShippingInput = styled.input`
   padding: 0.5rem 1rem;
+  margin: 5px 0;
   width: 100%;
   border: 1px solid #000;
   border-radius: 5px;

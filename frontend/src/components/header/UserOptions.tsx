@@ -121,11 +121,11 @@ const Dial = styled.div`
   gap: 1rem;
   z-index: 10;
   button {
-    background-color: #ebedf1;
+    background-color: #b6b8bb;
     display: flex;
     border-radius: 50%;
     &:hover {
-      box-shadow: 0 0 10px 1px grey;
+      box-shadow: 0 0 10px 1px #9a9a9c;
     }
     img {
       border-radius: 50%;
@@ -140,7 +140,7 @@ const Dial = styled.div`
 const OptionsContainer = styled.div`
   div {
     transition: transform 0.2s;
-    background-color: #f6f9fd;
+    background-color: #d2d4d9;
     cursor: pointer;
     width: 40px;
     height: 40px;

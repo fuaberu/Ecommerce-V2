@@ -58,7 +58,7 @@ const PaymentContainer = ({ clientSecret }: { clientSecret: string }) => {
           setMessage("Your payment is processing.");
           break;
         case "requires_payment_method":
-          setMessage("Your payment was not successful, please try again.");
+          setMessage("Please add your payment method");
           break;
         default:
           setMessage("Something went wrong.");

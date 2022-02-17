@@ -92,6 +92,7 @@ const ProductsContainer = styled.section`
 
 export const ProductsDisplay = styled.div`
   display: grid;
+  padding: 0 2vw;
   grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
   max-width: 100%;
